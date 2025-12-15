@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="SDL2_3Drenderer.vcxproj" Id="4904c575-1b7c-48fa-bb92-7a7e443df153" />
+</Solution>
