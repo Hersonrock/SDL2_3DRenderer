@@ -6,9 +6,13 @@
 bool is_running = false;
 
 SDL_DisplayMode display_mode;
+SDL_Window* window = NULL;
+SDL_Renderer* renderer = NULL;
 
 uint32_t window_width = 0;
 uint32_t window_height = 0;
+
+
 
 bool initialize_window(void) {
 
@@ -25,7 +29,17 @@ bool initialize_window(void) {
 	window_width = display_mode.w;
 	window_height = display_mode.h;
 
+	window = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_width, window_height, SDL_WINDOW_BORDERLESS);
+	if (!window) {
+		fprintf(stderr, "Failed to initialize window\n");
+		return false;
+	}
 
+	renderer = SDL_CreateRenderer(window, -1, 0);
+	if (!renderer) {
+		fprintf(stderr, "Failed to initialize renderer\n");
+		return false;
+	}
 
 	return true;
 }
