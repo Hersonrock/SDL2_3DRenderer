@@ -17,6 +17,8 @@ uint32_t window_height = 0;
 
 int32_t previous_frame_time = 0;
 
+uint32_t* color_buffer = NULL;
+
 
 bool initialize_window(void) {
 
@@ -49,7 +51,7 @@ bool initialize_window(void) {
 }
 
 void setup(void) {
-
+	color_buffer = (uint32_t*) malloc(window_width * window_height * sizeof(uint32_t));
 }
 
 void process_input(void) {
