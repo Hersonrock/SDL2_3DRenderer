@@ -116,11 +116,11 @@ void render(void) {
 }
 
 void destroy_window(void) {
+
+	SDL_DestroyTexture(color_buffer_texture);
+	free(color_buffer);
 	SDL_DestroyRenderer(render);
 	SDL_DestroyWindow(window);
-
-
-
 	SDL_Quit();
 }
 
