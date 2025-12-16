@@ -11,6 +11,7 @@ bool is_running = false;
 SDL_DisplayMode display_mode;
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
+SDL_Texture* color_buffer_texture = NULL;
 
 uint32_t window_width = 0;
 uint32_t window_height = 0;
@@ -52,6 +53,8 @@ bool initialize_window(void) {
 
 void setup(void) {
 	color_buffer = (uint32_t*) malloc(window_width * window_height * sizeof(uint32_t));
+
+	color_buffer_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, window_width, window_height);
 }
 
 void process_input(void) {
