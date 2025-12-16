@@ -44,9 +44,33 @@ bool initialize_window(void) {
 	return true;
 }
 
+void setup(void) {
+
+}
+
+void process_input(void) {
+
+}
+
+void update(void) {
+
+}
+
+void render(void) {
+
+}
+
 int main(int argc, char* argv[]) {
 	
 	is_running = initialize_window();
+
+	setup();
+
+	while (is_running) {
+		process_input();
+		update();
+		render();
+	}
 
 	return 0;
 }
