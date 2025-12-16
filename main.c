@@ -89,9 +89,28 @@ void update(void) {
 	previous_frame_time = SDL_GetTicks();
 }
 
+void color_buffer_clear(uint32_t color){
+	for (size_t y = 0; y < window_height; y++) {
+		for (size_t x = 0; x < window_width; x++) {
+			color_buffer[(window_width * y) + x] = color;
+		}
+	}
+}
+
+void color_buffer_render(void) {
+	
+	SDL_UpdateTexture(color_buffer_texture, NULL, color_buffer, (int)(window_width * sizeof(uint32_t)));
+
+	SDL_RenderCopy(renderer,color_buffer_texture, NULL, NULL);
+
+}
+
 void render(void) {
 	SDL_SetRenderDrawColor(renderer,0,100,100,255);
 	SDL_RenderClear(renderer);
+
+	color_buffer_render();
+	color_buffer_clear(0xFF550000);
 
 	SDL_RenderPresent(renderer);
 }
