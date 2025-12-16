@@ -60,6 +60,12 @@ void render(void) {
 
 }
 
+void destroy_window(void) {
+	SDL_DestroyRenderer(render);
+	SDL_DestroyWindow(window);
+	SDL_Quit();
+}
+
 int main(int argc, char* argv[]) {
 	
 	is_running = initialize_window();
@@ -71,6 +77,8 @@ int main(int argc, char* argv[]) {
 		update();
 		render();
 	}
+
+	destroy_window();
 
 	return 0;
 }
