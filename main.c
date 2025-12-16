@@ -3,6 +3,9 @@
 #include <stdint.h>
 #include <SDL.h>
 
+#define FPS 30
+#define FRAME_TARGET_TIME (1000 / FPS)
+
 bool is_running = false;
 
 SDL_DisplayMode display_mode;
@@ -12,6 +15,7 @@ SDL_Renderer* renderer = NULL;
 uint32_t window_width = 0;
 uint32_t window_height = 0;
 
+int32_t previous_frame_time = 0;
 
 
 bool initialize_window(void) {
@@ -53,7 +57,14 @@ void process_input(void) {
 }
 
 void update(void) {
+	
+	int32_t time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - previous_frame_time);
 
+	if (time_to_wait > 0) {
+		SDL_Delay(time_to_wait);
+	}
+
+	previous_frame_time = SDL_GetTicks();
 }
 
 void render(void) {
