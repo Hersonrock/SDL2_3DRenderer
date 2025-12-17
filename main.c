@@ -57,7 +57,8 @@ void render(void) {
 	SDL_RenderClear(renderer);
 
 	//draw_rectangle(300, 200, 300, 150, 0xFFFFFFFF);
-	circle_line_test();
+	//circle_line_test();
+
 
 	color_buffer_render();
 	color_buffer_clear(0xFF000000);
