@@ -16,6 +16,8 @@ uint32_t window_height;
 
 uint32_t* color_buffer;
 
+uint32_t step_grid;
+
 bool initialize_window(void);
 
 void draw_pixel(uint32_t x, uint32_t y, uint32_t color);
