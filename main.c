@@ -34,20 +34,46 @@ bool initialize_window(void) {
 		return false;
 	}
 
-	window_width = display_mode.w;
-	window_height = display_mode.h;
+#ifdef FULL_SCREEN
+	window_width = (int)display_mode.w;
+	window_height = (int)display_mode.h;
 
-	window = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_width, window_height, SDL_WINDOW_BORDERLESS);
-	if (!window) {
-		fprintf(stderr, "Failed to initialize window\n");
-		return false;
-	}
+	window = SDL_CreateWindow(
+		NULL,
+		SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED,
+		window_width,
+		window_height,
+		SDL_WINDOW_BORDERLESS
+	);
+#else
+	window_width = (int)display_mode.w * 0.8;
+	window_height = (int)display_mode.h * 0.8;
+
+	window = SDL_CreateWindow(
+		NULL,
+		SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED,
+		window_width,
+		window_height,
+		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+	);
+#endif // FULL_SCREEN
 
 	renderer = SDL_CreateRenderer(window, -1, 0);
 	if (!renderer) {
 		fprintf(stderr, "Failed to initialize renderer\n");
 		return false;
 	}
+
+#ifdef FULL_SCREEN
+
+	SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+#else
+
+	SDL_SetWindowFullscreen(window, 0);
+	SDL_SetWindowBordered(window, SDL_TRUE);
+#endif // FULL_SCREEN
 
 	return true;
 }
