@@ -170,6 +170,15 @@ void draw_grid_points(uint32_t step, uint32_t color) {
 	}
 }
 
+void draw_rectangle(uint32_t x, uint32_t y, uint32_t width, uint32_t height, uint32_t color) {
+	
+	for (size_t j = y; j <= y + height; j++) {
+		for (size_t i = x; i <= x + width; i++) {		
+			color_buffer[(window_width * j) + i] = color;
+		}
+	}
+}
+
 int circle_line_test(void) {
 
 	uint32_t cx = window_width / 2;
@@ -221,7 +230,8 @@ void render(void) {
 	SDL_SetRenderDrawColor(renderer, 0, 100, 100, 255);
 	SDL_RenderClear(renderer);
 
-	draw_grid_points(step_grid, 0xFFFFFFFF);
+	draw_rectangle(300, 200, 300, 150, 0xFFFFFFFF);
+
 	color_buffer_render();
 	color_buffer_clear(0xFF000000);
 
