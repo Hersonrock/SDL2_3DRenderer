@@ -20,7 +20,7 @@ uint32_t window_height = 0;
 int32_t previous_frame_time = 0;
 
 uint32_t* color_buffer = NULL;
-
+uint32_t step_grid = 1;
 
 bool initialize_window(void) {
 
@@ -72,6 +72,13 @@ void process_input(void) {
 			if (event.key.keysym.sym == SDLK_ESCAPE) {
 				is_running = false;
 			}
+			if (event.key.keysym.sym == SDLK_KP_PLUS) {
+				step_grid += 1;
+			}
+			if (event.key.keysym.sym == SDLK_KP_MINUS && step_grid > 1) {
+				step_grid -= 1;
+			}
+
 			break;
 		default:
 			break;
@@ -120,6 +127,33 @@ void draw_line(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, uint32_t colo
 			y1 += sy;
 		}
 	}
+}
+
+void draw_grid(uint32_t step, uint32_t color) {
+
+	uint32_t w_h = window_height - 2;
+	uint32_t w_w = window_width - 2;
+	uint32_t i = 0;
+	uint32_t j = 0;
+
+	while (1) {
+		if (i > w_w) {
+			draw_line(w_w, 0, w_w, w_h, color);
+			break;
+		}
+		draw_line(i, 0, i, w_h, color);
+		i += step;
+	}
+
+	while (1) {
+		if (j > w_h) {
+			draw_line(0, w_h, w_w, w_h, color);
+			break;
+		}
+		draw_line(0, j, w_w, j, color);
+		j += step;
+	}
+
 }
 
 int circle_line_test(void) {
@@ -173,9 +207,9 @@ void render(void) {
 	SDL_SetRenderDrawColor(renderer,0,100,100,255);
 	SDL_RenderClear(renderer);
 
-	circle_line_test();
+	draw_grid(step_grid,0xFFFFFFFF);
 	color_buffer_render();
-	color_buffer_clear(0xFF550000);
+	color_buffer_clear(0xFF000000);
 
 	SDL_RenderPresent(renderer);
 }
