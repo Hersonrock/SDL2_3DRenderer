@@ -53,7 +53,7 @@ bool initialize_window(void) {
 }
 
 void setup(void) {
-	color_buffer = (uint32_t*) malloc(window_width * window_height * sizeof(uint32_t));
+	color_buffer = (uint32_t*)malloc(window_width * window_height * sizeof(uint32_t));
 
 	color_buffer_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, window_width, window_height);
 }
@@ -63,31 +63,31 @@ void process_input(void) {
 	SDL_PollEvent(&event);
 
 	switch (event.type) {
-		
-		case SDL_QUIT:
+
+	case SDL_QUIT:
+		is_running = false;
+		break;
+
+	case SDL_KEYDOWN:
+		if (event.key.keysym.sym == SDLK_ESCAPE) {
 			is_running = false;
-			break;
+		}
+		if (event.key.keysym.sym == SDLK_KP_PLUS) {
+			step_grid += 1;
+		}
+		if (event.key.keysym.sym == SDLK_KP_MINUS && step_grid > 1) {
+			step_grid -= 1;
+		}
 
-		case SDL_KEYDOWN:
-			if (event.key.keysym.sym == SDLK_ESCAPE) {
-				is_running = false;
-			}
-			if (event.key.keysym.sym == SDLK_KP_PLUS) {
-				step_grid += 1;
-			}
-			if (event.key.keysym.sym == SDLK_KP_MINUS && step_grid > 1) {
-				step_grid -= 1;
-			}
-
-			break;
-		default:
-			break;
+		break;
+	default:
+		break;
 	}
 
 }
 
 void update(void) {
-	
+
 	int32_t time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - previous_frame_time);
 
 	if (time_to_wait > 0) {
@@ -129,7 +129,7 @@ void draw_line(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, uint32_t colo
 	}
 }
 
-void draw_grid(uint32_t step, uint32_t color) {
+void draw_grid_line(uint32_t step, uint32_t color) {
 
 	uint32_t w_h = window_height - 2;
 	uint32_t w_w = window_width - 2;
@@ -154,6 +154,20 @@ void draw_grid(uint32_t step, uint32_t color) {
 		j += step;
 	}
 
+}
+
+void draw_grid_points(uint32_t step, uint32_t color) {
+
+	uint32_t w_h = window_height - 2;
+	uint32_t w_w = window_width - 2;
+
+	for (size_t j = 0; j <= w_h; j++) {
+		for (size_t i = 0; i <= w_w; i++) {
+			if (j % step == 0 && i % step == 0) {
+				color_buffer[(window_width * j) + i] = color;
+			}
+		}
+	}
 }
 
 int circle_line_test(void) {
@@ -187,7 +201,7 @@ int circle_line_test(void) {
 	return 0;
 }
 
-void color_buffer_clear(uint32_t color){
+void color_buffer_clear(uint32_t color) {
 	for (size_t y = 0; y < window_height; y++) {
 		for (size_t x = 0; x < window_width; x++) {
 			color_buffer[(window_width * y) + x] = color;
@@ -196,18 +210,18 @@ void color_buffer_clear(uint32_t color){
 }
 
 void color_buffer_render(void) {
-	
+
 	SDL_UpdateTexture(color_buffer_texture, NULL, color_buffer, (int)(window_width * sizeof(uint32_t)));
 
-	SDL_RenderCopy(renderer,color_buffer_texture, NULL, NULL);
+	SDL_RenderCopy(renderer, color_buffer_texture, NULL, NULL);
 
 }
 
 void render(void) {
-	SDL_SetRenderDrawColor(renderer,0,100,100,255);
+	SDL_SetRenderDrawColor(renderer, 0, 100, 100, 255);
 	SDL_RenderClear(renderer);
 
-	draw_grid(step_grid,0xFFFFFFFF);
+	draw_grid_points(step_grid, 0xFFFFFFFF);
 	color_buffer_render();
 	color_buffer_clear(0xFF000000);
 
@@ -224,7 +238,7 @@ void destroy_window(void) {
 }
 
 int main(int argc, char* argv[]) {
-	
+
 	is_running = initialize_window();
 
 	setup();
