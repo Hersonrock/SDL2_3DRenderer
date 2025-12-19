@@ -11,6 +11,8 @@ void setup(void) {
 	color_buffer = (uint32_t*)malloc(window_width * window_height * sizeof(uint32_t));
 
 	color_buffer_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, window_width, window_height);
+
+	draw_3Dcube_points(CUBE_POINTS, cube_points);
 }
 
 void process_input(void) {

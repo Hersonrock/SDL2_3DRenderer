@@ -140,6 +140,24 @@ void draw_rectangle(uint32_t x, uint32_t y, uint32_t width, uint32_t height, uin
 	}
 }
 
+void draw_3Dcube_points(uint32_t size, vec3_t* points) {
+	uint32_t point_count = 0;
+	float step = 2.0f / (size - 1);
+
+	for (float x = -1; x <= 1; x += step) {
+		for (float y = -1; y <= 1; y += step) {
+			for (float z = -1; z <= 1; z += step) {
+				vec3_t p = {
+					.x = x,
+					.y = y,
+					.z = z
+				};
+				points[point_count++] = p;
+			}
+		}
+	}
+}
+
 
 void color_buffer_clear(uint32_t color) {
 	for (size_t y = 0; y < window_height; y++) {
