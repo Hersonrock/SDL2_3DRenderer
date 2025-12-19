@@ -7,12 +7,17 @@
 bool is_running = false;
 int32_t previous_frame_time = 0;
 
+
+vec2_t projected_points[N_CUBE_POINTS];
+float fov_factor = 128.0f;
+
+
 void setup(void) {
 	color_buffer = (uint32_t*)malloc(window_width * window_height * sizeof(uint32_t));
 
 	color_buffer_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, window_width, window_height);
 
-	draw_3Dcube_points(CUBE_POINTS, cube_points);
+	generate_3Dcube_points(CUBE_POINTS, cube_points);
 }
 
 void process_input(void) {
@@ -42,6 +47,13 @@ void process_input(void) {
 	}
 
 }
+vec2_t project(vec3_t point) {
+	vec2_t projected_point = {
+		.x = (point.x * fov_factor),
+		.y = (point.y * fov_factor)
+	};
+	return projected_point;
+}
 
 void update(void) {
 
@@ -52,15 +64,28 @@ void update(void) {
 	}
 
 	previous_frame_time = SDL_GetTicks();
+
+	for (int32_t i = 0; i < N_CUBE_POINTS; i++) {
+		projected_points[i] = project(cube_points[i]);
+	}
+
 }
+
+
 
 void render(void) {
 	SDL_SetRenderDrawColor(renderer, 0, 100, 100, 255);
 	SDL_RenderClear(renderer);
 
-	//draw_rectangle(300, 200, 300, 150, 0xFFFFFFFF);
-	//circle_line_test();
-
+	for (size_t i = 0; i < N_CUBE_POINTS; i++) {
+		draw_rectangle(
+			projected_points[i].x + (window_width / 2),
+			projected_points[i].y + (window_height / 2),
+			4,
+			4,
+			0xFFFFFFFF
+		);
+	}
 
 	color_buffer_render();
 	color_buffer_clear(0xFF000000);
