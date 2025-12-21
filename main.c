@@ -9,7 +9,8 @@ int32_t previous_frame_time = 0;
 
 
 vec2_t projected_points[N_CUBE_POINTS];
-float fov_factor = 128.0f;
+vec3_t world_space_points[N_CUBE_POINTS];
+float scale_factor = 128.0f;
 
 
 void setup(void) {
@@ -35,10 +36,12 @@ void process_input(void) {
 			is_running = false;
 		}
 		if (event.key.keysym.sym == SDLK_KP_PLUS) {
-			step_grid += 1;
+			//step_grid += 1;
+			scale_factor += 1;
 		}
 		if (event.key.keysym.sym == SDLK_KP_MINUS && step_grid > 1) {
-			step_grid -= 1;
+			//step_grid -= 1;
+			scale_factor -= 1;
 		}
 
 		break;
@@ -47,10 +50,20 @@ void process_input(void) {
 	}
 
 }
-vec2_t project(vec3_t point) {
+
+vec3_t world_transform(vec3_t point) {
+	vec3_t transformed_point = {
+		.x = (point.x * scale_factor) + window_width / 2,
+		.y = (point.y * scale_factor) + window_height / 2,
+		.z = (point.z * scale_factor),
+	};
+	return transformed_point;
+}
+
+vec2_t orthographic_project(vec3_t point) {
 	vec2_t projected_point = {
-		.x = (point.x * fov_factor),
-		.y = (point.y * fov_factor)
+		.x = point.x,
+		.y = point.y
 	};
 	return projected_point;
 }
@@ -64,14 +77,15 @@ void update(void) {
 	}
 
 	previous_frame_time = SDL_GetTicks();
-
+	
 	for (int32_t i = 0; i < N_CUBE_POINTS; i++) {
-		projected_points[i] = project(cube_points[i]);
+		world_space_points[i] = world_transform(cube_points[i]); // World Space transform
+		// Camera transform is an Identity transform
+		// No clip space or NDC (no homogeneous coordinates or perspective)
+		projected_points[i] = orthographic_project(world_space_points[i]);    // Screen Space transform(Naive Orthogonal)
 	}
 
 }
-
-
 
 void render(void) {
 	SDL_SetRenderDrawColor(renderer, 0, 100, 100, 255);
@@ -79,8 +93,8 @@ void render(void) {
 
 	for (size_t i = 0; i < N_CUBE_POINTS; i++) {
 		draw_rectangle(
-			projected_points[i].x + (window_width / 2),
-			projected_points[i].y + (window_height / 2),
+			projected_points[i].x,
+			projected_points[i].y,
 			4,
 			4,
 			0xFFFFFFFF

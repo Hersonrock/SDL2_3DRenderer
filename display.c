@@ -1,6 +1,6 @@
 #include "display.h"
 
-
+uint32_t step_grid = 1;
 bool initialize_window(void) {
 
 	if (SDL_Init(SDL_INIT_EVERYTHING)) {
