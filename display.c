@@ -59,7 +59,13 @@ bool initialize_window(void) {
 
 
 void draw_pixel(uint32_t x, uint32_t y, uint32_t color) {
-	color_buffer[(window_width * y) + x] = color;
+	if (x < window_width && y < window_height) {
+		color_buffer[(window_width * y) + x] = color;
+	}
+	else
+	{
+		printf("Pixel Bound Error (%dx%d)(%d,%d)\n", window_width, window_height,x, y);
+	}
 }
 
 void draw_line(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, uint32_t color) {
@@ -135,7 +141,7 @@ void draw_rectangle(uint32_t x, uint32_t y, uint32_t width, uint32_t height, uin
 
 	for (size_t j = y; j <= y + height; j++) {
 		for (size_t i = x; i <= x + width; i++) {
-			color_buffer[(window_width * j) + i] = color;
+			draw_pixel(i, j, color);
 		}
 	}
 }
