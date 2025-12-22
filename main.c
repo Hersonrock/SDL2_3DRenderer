@@ -7,7 +7,7 @@
 bool is_running = false;
 int32_t previous_frame_time = 0;
 
-void setup(void) {
+static void setup(void) {
 	color_buffer = (uint32_t*)malloc(window_width * window_height * sizeof(uint32_t));
 
 	color_buffer_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, window_width, window_height);
@@ -15,7 +15,7 @@ void setup(void) {
 	draw_3Dcube_points(CUBE_POINTS, cube_points);
 }
 
-void process_input(void) {
+static void process_input(void) {
 	SDL_Event event;
 	SDL_PollEvent(&event);
 
@@ -43,7 +43,7 @@ void process_input(void) {
 
 }
 
-void update(void) {
+static void update(void) {
 
 	int32_t time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - previous_frame_time);
 
@@ -54,12 +54,9 @@ void update(void) {
 	previous_frame_time = SDL_GetTicks();
 }
 
-void render(void) {
+static void render(void) {
 	SDL_SetRenderDrawColor(renderer, 0, 100, 100, 255);
 	SDL_RenderClear(renderer);
-
-	//draw_rectangle(300, 200, 300, 150, 0xFFFFFFFF);
-	//circle_line_test();
 
 
 	color_buffer_render();
@@ -70,6 +67,8 @@ void render(void) {
 
 int main(int argc, char* argv[]) {
 
+	(void)argc;
+	(void)argv;
 	is_running = initialize_window();
 
 	setup();

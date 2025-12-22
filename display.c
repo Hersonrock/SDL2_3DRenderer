@@ -1,5 +1,18 @@
 #include "display.h"
 
+vec3_t cube_points[N_CUBE_POINTS];
+
+SDL_DisplayMode display_mode;
+SDL_Window* window = NULL;
+SDL_Renderer* renderer = NULL;
+SDL_Texture* color_buffer_texture = NULL;
+
+uint32_t window_width = 0;
+uint32_t window_height = 0;
+
+uint32_t* color_buffer = NULL;
+
+uint32_t step_grid = 1;
 
 bool initialize_window(void) {
 
@@ -68,7 +81,10 @@ void draw_pixel(uint32_t x, uint32_t y, uint32_t color) {
 	}
 }
 
-void draw_line(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, uint32_t color) {
+void draw_line(int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t color) {
+
+	assert(x1 >= 0 && y1 >=0);
+	assert(x2 >= 0 && y2 >= 0);
 
 	int32_t dx = abs(x1 - x2);
 	int32_t dy = abs(y1 - y2);
