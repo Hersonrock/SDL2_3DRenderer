@@ -12,8 +12,6 @@ uint32_t window_height = 0;
 
 uint32_t* color_buffer = NULL;
 
-uint32_t step_grid = 1;
-
 bool initialize_window(void) {
 
 	if (SDL_Init(SDL_INIT_EVERYTHING)) {
@@ -162,7 +160,7 @@ void draw_rectangle(uint32_t x, uint32_t y, uint32_t width, uint32_t height, uin
 	}
 }
 
-void draw_3Dcube_points(uint32_t size, vec3_t* points) {
+void generate_3Dcube_points(uint32_t size, vec3_t* points) {
 	uint32_t point_count = 0;
 	float step = 2.0f / (size - 1);
 

@@ -12,7 +12,7 @@ static void setup(void) {
 
 	color_buffer_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, window_width, window_height);
 
-	draw_3Dcube_points(CUBE_POINTS, cube_points);
+	generate_3Dcube_points(CUBE_POINTS, cube_points);
 }
 
 static void process_input(void) {
@@ -28,12 +28,6 @@ static void process_input(void) {
 	case SDL_KEYDOWN:
 		if (event.key.keysym.sym == SDLK_ESCAPE) {
 			is_running = false;
-		}
-		if (event.key.keysym.sym == SDLK_KP_PLUS) {
-			step_grid += 1;
-		}
-		if (event.key.keysym.sym == SDLK_KP_MINUS && step_grid > 1) {
-			step_grid -= 1;
 		}
 
 		break;
