@@ -1,4 +1,5 @@
 #include "display.h"
+#include "matrix.h"
 #include "test.h"
 
 #define FPS 30
@@ -13,6 +14,9 @@ vec2_t screen_space_points[N_CUBE_POINTS];
 
 vec3_t camera_position = { .x = 0, .y = 0, .z = -5 };
 float fov_factor = 640.0f;
+
+vec3_t rotation = {0, 0, 0};
+float rotation_delta = 0.05;
 
 static void setup(void) {
 	color_buffer = (uint32_t*)malloc(window_width * window_height * sizeof(uint32_t));
@@ -54,6 +58,17 @@ vec3_t world_transform(vec3_t point) {
 		.y = point.y,
 		.z = point.z,
 	};
+
+	mat3_t rotation_mat3_z = make_rotation_mat3_z(rotation.z);
+	mat3_t rotation_mat3_x = make_rotation_mat3_x(rotation.x);
+	mat3_t rotation_mat3_y = make_rotation_mat3_y(rotation.y);
+
+	transformed_point = mat3_mult_vec3(rotation_mat3_z, transformed_point); // roll
+	transformed_point = mat3_mult_vec3(rotation_mat3_x, transformed_point); // pitch
+	transformed_point = mat3_mult_vec3(rotation_mat3_y, transformed_point); // yaw
+
+
+
 	return transformed_point;
 }
 
@@ -70,9 +85,14 @@ vec3_t view_transform(vec3_t point) {
 
 vec2_t screen_transform(vec3_t point) {
 
-	//Screen space transform
-	//Fov change, is more of a conceptual zoom all points change at the same rate.
-	//Translation is also a screen space transform as it is done after the points are moved into 2D.
+	/*Screen space transform
+	Fov change, is more of a conceptual zoom all points change at the same rate.
+	Translation is also a screen space transform as it is done after the points are moved into 2D.
+	 I'm pilling up many tranformations here as screen transformations and they really are not, 
+	 such as the scaling times fov_factor is more of a Clip Space transform.
+	 In the same place the perspective divide / point.z is more of a NDC
+	*/
+
 
 	vec2_t transformed_point = {
 		.x = ((point.x * fov_factor) / point.z) + (window_width / 2),
@@ -97,6 +117,12 @@ static void update(void) {
 		// No clip space or NDC (Normalized device coordinates)
 		screen_space_points[i] = screen_transform(view_space_points[i]);    // Perspective_project + FOV Scaling + Translation
 	}
+
+	rotation = (vec3_t){
+		.x = rotation.x + rotation_delta,
+		.y = rotation.y + rotation_delta,
+		.z = rotation.z + rotation_delta
+	};
 
 }
 
