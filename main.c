@@ -7,6 +7,13 @@
 bool is_running = false;
 int32_t previous_frame_time = 0;
 
+vec3_t world_space_points[N_CUBE_POINTS];
+vec3_t view_space_points[N_CUBE_POINTS];
+vec2_t screen_space_points[N_CUBE_POINTS];
+
+vec3_t camera_position = { .x = 0, .y = 0, .z = -5 };
+float fov_factor = 640.0f;
+
 static void setup(void) {
 	color_buffer = (uint32_t*)malloc(window_width * window_height * sizeof(uint32_t));
 
@@ -37,6 +44,43 @@ static void process_input(void) {
 
 }
 
+vec3_t world_transform(vec3_t point) {
+	/*	These are here to clarify behavior, since I'm rendering a single objec
+		world transforms really carry no meaning since there is no reference point.
+		but in case they do, they are here.
+	*/
+	vec3_t transformed_point = {
+		.x = point.x,
+		.y = point.y,
+		.z = point.z,
+	};
+	return transformed_point;
+}
+
+vec3_t view_transform(vec3_t point) {
+	/*	Dolly , the actual camera moves. Objects closer change aparent size faster than those far away.
+	*/
+	vec3_t transformed_point = {
+		.x = point.x,
+		.y = point.y,
+		.z = point.z - camera_position.z
+	};
+	return transformed_point;
+}
+
+vec2_t screen_transform(vec3_t point) {
+
+	//Screen space transform
+	//Fov change, is more of a conceptual zoom all points change at the same rate.
+	//Translation is also a screen space transform as it is done after the points are moved into 2D.
+
+	vec2_t transformed_point = {
+		.x = ((point.x * fov_factor) / point.z) + (window_width / 2),
+		.y = ((point.y * fov_factor) / point.z) + (window_height / 2)
+	};
+	return transformed_point;
+}
+
 static void update(void) {
 
 	int32_t time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - previous_frame_time);
@@ -46,6 +90,14 @@ static void update(void) {
 	}
 
 	previous_frame_time = SDL_GetTicks();
+
+	for (int32_t i = 0; i < N_CUBE_POINTS; i++) {
+		world_space_points[i] = world_transform(cube_points[i]); // World Space transform
+		view_space_points[i] = view_transform(world_space_points[i]); // View Space transform
+		// No clip space or NDC (Normalized device coordinates)
+		screen_space_points[i] = screen_transform(view_space_points[i]);    // Perspective_project + FOV Scaling + Translation
+	}
+
 }
 
 static void render(void) {
@@ -53,6 +105,15 @@ static void render(void) {
 	SDL_RenderClear(renderer);
 
 
+	for (size_t i = 0; i < N_CUBE_POINTS; i++) {
+		draw_rectangle(
+			screen_space_points[i].x,
+			screen_space_points[i].y,
+			4,
+			4,
+			0xFFFFFFFF
+		);
+	}
 	color_buffer_render();
 	color_buffer_clear(0xFF000000);
 
