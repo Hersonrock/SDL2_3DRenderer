@@ -1,5 +1,6 @@
 #include "display.h"
 #include "matrix.h"
+#include "mesh.h"
 #include "test.h"
 
 #define FPS 30
@@ -8,9 +9,11 @@
 bool is_running = false;
 int32_t previous_frame_time = 0;
 
-vec3_t world_space_points[N_CUBE_POINTS];
-vec3_t view_space_points[N_CUBE_POINTS];
-vec2_t screen_space_points[N_CUBE_POINTS];
+vec3_t world_space_points[TRI];
+vec3_t view_space_points[TRI];
+vec2_t screen_space_points[TRI];
+
+triangle_t triangles_to_render[N_MESH_FACES];
 
 vec3_t camera_position = { .x = 0, .y = 0, .z = -5 };
 float fov_factor = 640.0f;
@@ -22,8 +25,6 @@ static void setup(void) {
 	color_buffer = (uint32_t*)malloc(window_width * window_height * sizeof(uint32_t));
 
 	color_buffer_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, window_width, window_height);
-
-	generate_3Dcube_points(CUBE_POINTS, cube_points);
 }
 
 static void process_input(void) {
@@ -111,11 +112,19 @@ static void update(void) {
 
 	previous_frame_time = SDL_GetTicks();
 
-	for (int32_t i = 0; i < N_CUBE_POINTS; i++) {
-		world_space_points[i] = world_transform(cube_points[i]); // World Space transform
-		view_space_points[i] = view_transform(world_space_points[i]); // View Space transform
-		// No clip space or NDC (Normalized device coordinates)
-		screen_space_points[i] = screen_transform(view_space_points[i]);    // Perspective_project + FOV Scaling + Translation
+	for (size_t i = 0; i < N_MESH_FACES; i++) {
+		vec3_t face_vertices[TRI];
+		face_vertices[0] = mesh_vertices[mesh_faces[i].a - 1];
+		face_vertices[1] = mesh_vertices[mesh_faces[i].b - 1];
+		face_vertices[2] = mesh_vertices[mesh_faces[i].c - 1];
+
+		for (size_t j = 0; j < TRI; j++) {
+			world_space_points[j] = world_transform(face_vertices[j]); // World Space transform
+			view_space_points[j] = view_transform(world_space_points[j]); // View Space transform
+			// No clip space or NDC (Normalized device coordinates)
+			screen_space_points[j] = screen_transform(view_space_points[j]);    // Perspective_project + FOV Scaling + Translation
+			triangles_to_render[i].points[j] = screen_space_points[j];
+		}
 	}
 
 	rotation = (vec3_t){
@@ -131,15 +140,10 @@ static void render(void) {
 	SDL_RenderClear(renderer);
 
 
-	for (size_t i = 0; i < N_CUBE_POINTS; i++) {
-		draw_rectangle(
-			screen_space_points[i].x,
-			screen_space_points[i].y,
-			4,
-			4,
-			0xFFFFFFFF
-		);
+	for (size_t i = 0; i < N_MESH_FACES; i++) {
+		draw_triangle(triangles_to_render[i],4, 0xFFFFFFFF);
 	}
+
 	color_buffer_render();
 	color_buffer_clear(0xFF000000);
 
