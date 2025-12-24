@@ -160,6 +160,13 @@ void draw_rectangle(uint32_t x, uint32_t y, uint32_t width, uint32_t height, uin
 	}
 }
 
+void draw_triangle(triangle_t triangle,uint32_t size, uint32_t color) {
+
+	for (size_t i = 0; i < TRI; i++) {
+		draw_rectangle(triangle.points[i].x, triangle.points[i].y, size, size, color);
+	}
+}
+
 void generate_3Dcube_points(uint32_t size, vec3_t* points) {
 	uint32_t point_count = 0;
 	float step = 2.0f / (size - 1);
