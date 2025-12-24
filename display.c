@@ -15,12 +15,12 @@ uint32_t* color_buffer = NULL;
 bool initialize_window(void) {
 
 	if (SDL_Init(SDL_INIT_EVERYTHING)) {
-		fprintf(stderr, "Failed to initialize SDL.\n");
+		fprintf_s(stderr, "Failed to initialize SDL.\n");
 		return false;
 	}
 
 	if (SDL_GetCurrentDisplayMode(0, &display_mode)) {
-		fprintf(stderr, "Failed to get current display mode.\n");
+		fprintf_s(stderr, "Failed to get current display mode.\n");
 		return false;
 	}
 
@@ -52,7 +52,7 @@ bool initialize_window(void) {
 
 	renderer = SDL_CreateRenderer(window, -1, 0);
 	if (!renderer) {
-		fprintf(stderr, "Failed to initialize renderer\n");
+		fprintf_s(stderr, "Failed to initialize renderer\n");
 		return false;
 	}
 
@@ -97,7 +97,7 @@ void draw_line(int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t color) {
 
 		if (x1 == x2 && y1 == y2) break;
 
-		int32_t e2 = err << 1;
+		int32_t e2 = err * 1;
 
 		if (e2 > -dy) {
 			err -= dy;
@@ -164,19 +164,20 @@ void generate_3Dcube_points(uint32_t size, vec3_t* points) {
 	uint32_t point_count = 0;
 	float step = 2.0f / (size - 1);
 
-	for (float x = -1; x <= 1; x += step) {
-		for (float y = -1; y <= 1; y += step) {
-			for (float z = -1; z <= 1; z += step) {
+	for (uint32_t i = 0; i < size; i++) {
+		for (uint32_t j = 0; j < size; j++) {
+			for (uint32_t k = 0; k < size; k++) {
 				vec3_t p = {
-					.x = x,
-					.y = y,
-					.z = z
+					.x = -1.0f + i * step,
+					.y = -1.0f + j * step,
+					.z = -1.0f + k * step
 				};
 				points[point_count++] = p;
 			}
 		}
 	}
 }
+
 
 
 void color_buffer_clear(uint32_t color) {
