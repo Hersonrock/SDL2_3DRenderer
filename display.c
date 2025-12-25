@@ -217,3 +217,7 @@ void destroy_window(void) {
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 }
+
+void free_resources(void) {
+	array_free(triangles_to_render);
+}

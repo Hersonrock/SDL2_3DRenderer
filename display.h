@@ -8,6 +8,7 @@
 #include <assert.h>
 #include "vector.h"
 #include "triangle.h"
+#include "array.h"
 
 // n x n x n Cube////////////////////////////////////////////////
 #define CUBE_POINTS 9                                          //
@@ -24,6 +25,7 @@ extern uint32_t window_width;
 extern uint32_t window_height;
 
 extern uint32_t* color_buffer;
+extern triangle_t* triangles_to_render;
 
 bool initialize_window(void);
 
@@ -40,5 +42,6 @@ void color_buffer_clear(uint32_t color);
 void color_buffer_render(void);
 
 void destroy_window(void);
+void free_resources(void);
 
 #endif // DISPLAY
