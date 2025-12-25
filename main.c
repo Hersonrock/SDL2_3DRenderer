@@ -2,6 +2,7 @@
 #include "matrix.h"
 #include "mesh.h"
 #include "test.h"
+#include "array.h"
 
 #define FPS 30
 #define FRAME_TARGET_TIME (1000 / FPS)
@@ -13,7 +14,7 @@ vec3_t world_space_points[TRI];
 vec3_t view_space_points[TRI];
 vec2_t screen_space_points[TRI];
 
-triangle_t triangles_to_render[N_MESH_FACES];
+triangle_t* triangles_to_render = NULL;
 
 vec3_t camera_position = { .x = 0, .y = 0, .z = -5 };
 float fov_factor = 640.0f;
@@ -111,20 +112,23 @@ static void update(void) {
 	}
 
 	previous_frame_time = SDL_GetTicks();
-
+	
 	for (size_t i = 0; i < N_MESH_FACES; i++) {
 		vec3_t face_vertices[TRI];
 		face_vertices[0] = mesh_vertices[mesh_faces[i].a - 1];
 		face_vertices[1] = mesh_vertices[mesh_faces[i].b - 1];
 		face_vertices[2] = mesh_vertices[mesh_faces[i].c - 1];
 
+		triangle_t transformed_triangle;
 		for (size_t j = 0; j < TRI; j++) {
 			world_space_points[j] = world_transform(face_vertices[j]); // World Space transform
 			view_space_points[j] = view_transform(world_space_points[j]); // View Space transform
 			// No clip space or NDC (Normalized device coordinates)
 			screen_space_points[j] = screen_transform(view_space_points[j]);    // Perspective_project + FOV Scaling + Translation
-			triangles_to_render[i].points[j] = screen_space_points[j];
+			
+			transformed_triangle.points[j] = screen_space_points[j];
 		}
+		array_push(triangles_to_render, transformed_triangle);
 	}
 
 	rotation = (vec3_t){
@@ -139,10 +143,12 @@ static void render(void) {
 	SDL_SetRenderDrawColor(renderer, 0, 100, 100, 255);
 	SDL_RenderClear(renderer);
 
-
-	for (size_t i = 0; i < N_MESH_FACES; i++) {
+	size_t num_triangles = array_length(triangles_to_render);
+	for (size_t i = 0; i < num_triangles; i++) {
 		draw_triangle(triangles_to_render[i],4, 0xFFFFFFFF);
 	}
+	array_free(triangles_to_render);
+	triangles_to_render = NULL;
 
 	color_buffer_render();
 	color_buffer_clear(0xFF000000);
@@ -165,6 +171,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	destroy_window();
+	free_resources();
 
 	return 0;
 }
