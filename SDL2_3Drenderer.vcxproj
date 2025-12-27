@@ -169,6 +169,7 @@
   <ItemGroup>
     <ClCompile Include="array.c" />
     <ClCompile Include="display.c" />
+    <ClCompile Include="load.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="matrix.c" />
     <ClCompile Include="mesh.c" />
@@ -179,6 +180,7 @@
   <ItemGroup>
     <ClInclude Include="array.h" />
     <ClInclude Include="display.h" />
+    <ClInclude Include="load.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="test.h" />
