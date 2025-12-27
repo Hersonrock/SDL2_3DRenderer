@@ -220,4 +220,6 @@ void destroy_window(void) {
 
 void free_resources(void) {
 	array_free(triangles_to_render);
+	array_free(mesh.faces);
+	array_free(mesh.vertices);
 }

@@ -16,6 +16,12 @@ vec2_t screen_space_points[TRI];
 
 triangle_t* triangles_to_render = NULL;
 
+mesh_t mesh = {
+	.vertices = NULL,
+	.faces = NULL,
+	.rotation = {.x = 0, .y = 0, .z = 0 }
+};
+
 vec3_t camera_position = { .x = 0, .y = 0, .z = -5 };
 float fov_factor = 640.0f;
 
@@ -26,6 +32,7 @@ static void setup(void) {
 	color_buffer = (uint32_t*)malloc(window_width * window_height * sizeof(uint32_t));
 
 	color_buffer_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, window_width, window_height);
+	load_cube_mesh_data();
 }
 
 static void process_input(void) {
@@ -61,9 +68,9 @@ vec3_t world_transform(vec3_t point) {
 		.z = point.z,
 	};
 
-	mat3_t rotation_mat3_z = make_rotation_mat3_z(rotation.z);
-	mat3_t rotation_mat3_x = make_rotation_mat3_x(rotation.x);
-	mat3_t rotation_mat3_y = make_rotation_mat3_y(rotation.y);
+	mat3_t rotation_mat3_z = make_rotation_mat3_z(mesh.rotation.z);
+	mat3_t rotation_mat3_x = make_rotation_mat3_x(mesh.rotation.x);
+	mat3_t rotation_mat3_y = make_rotation_mat3_y(mesh.rotation.y);
 
 	transformed_point = mat3_mult_vec3(rotation_mat3_z, transformed_point); // roll
 	transformed_point = mat3_mult_vec3(rotation_mat3_x, transformed_point); // pitch
@@ -113,11 +120,11 @@ static void update(void) {
 
 	previous_frame_time = SDL_GetTicks();
 	
-	for (size_t i = 0; i < N_MESH_FACES; i++) {
+	for (size_t i = 0; i < (uint32_t)array_length(mesh.faces); i++) {
 		vec3_t face_vertices[TRI];
-		face_vertices[0] = mesh_vertices[mesh_faces[i].a - 1];
-		face_vertices[1] = mesh_vertices[mesh_faces[i].b - 1];
-		face_vertices[2] = mesh_vertices[mesh_faces[i].c - 1];
+		face_vertices[0] = mesh.vertices[mesh.faces[i].a - 1];
+		face_vertices[1] = mesh.vertices[mesh.faces[i].b - 1];
+		face_vertices[2] = mesh.vertices[mesh.faces[i].c - 1];
 
 		triangle_t transformed_triangle;
 		for (size_t j = 0; j < TRI; j++) {
@@ -131,10 +138,10 @@ static void update(void) {
 		array_push(triangles_to_render, transformed_triangle);
 	}
 
-	rotation = (vec3_t){
-		.x = rotation.x + rotation_delta,
-		.y = rotation.y + rotation_delta,
-		.z = rotation.z + rotation_delta
+	mesh.rotation = (vec3_t){
+		.x = mesh.rotation.x + rotation_delta,
+		.y = mesh.rotation.y + rotation_delta,
+		.z = mesh.rotation.z + rotation_delta
 	};
 
 }

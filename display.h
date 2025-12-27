@@ -9,6 +9,7 @@
 #include "vector.h"
 #include "triangle.h"
 #include "array.h"
+#include "mesh.h"
 
 // n x n x n Cube////////////////////////////////////////////////
 #define CUBE_POINTS 9                                          //
