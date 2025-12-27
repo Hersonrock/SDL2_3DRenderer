@@ -34,6 +34,8 @@ face_t cube_faces[N_CUBE_FACES] = {
 	{.a = 8, .b = 4, .c = 6}
 };
 
+vec3_t* obj_vertices = NULL;
+face_t* obj_faces = NULL;
 
 void load_cube_mesh_data(void) {
 	for (size_t i = 0; i < N_CUBE_VERTICES; i++) {
@@ -45,4 +47,9 @@ void load_cube_mesh_data(void) {
 		face_t cube_vertex = cube_faces[i];
 		array_push(mesh.faces, cube_vertex);
 	}
+}
+  
+void load_obj_file_data(char* filename) {
+	FILE* fd = open_file(filename);
+	read_file(fd, &mesh.vertices, &mesh.faces);
 }

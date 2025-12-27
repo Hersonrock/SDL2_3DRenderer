@@ -7,6 +7,8 @@
 #define FPS 30
 #define FRAME_TARGET_TIME (1000 / FPS)
 
+char *filename = "f22.obj";
+
 bool is_running = false;
 int32_t previous_frame_time = 0;
 
@@ -32,7 +34,8 @@ static void setup(void) {
 	color_buffer = (uint32_t*)malloc(window_width * window_height * sizeof(uint32_t));
 
 	color_buffer_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, window_width, window_height);
-	load_cube_mesh_data();
+	//load_cube_mesh_data();
+	load_obj_file_data(filename);
 }
 
 static void process_input(void) {
