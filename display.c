@@ -160,9 +160,9 @@ void draw_rectangle(uint32_t x, uint32_t y, uint32_t width, uint32_t height, uin
 	}
 }
 
-void draw_triangle(triangle_t triangle,uint32_t size, uint32_t color) {
+void draw_triangle(triangle_t triangle, uint32_t color) {
 	for (size_t i = 0; i < TRI; i++) {
-		draw_rectangle(triangle.points[i].x, triangle.points[i].y, size, size, color);
+		//draw_rectangle(triangle.points[i].x, triangle.points[i].y, size, size, color);
 
 		if (i > 0) {
 			draw_line(triangle.points[i - 1].x, triangle.points[i - 1].y, triangle.points[i].x, triangle.points[i].y, color);

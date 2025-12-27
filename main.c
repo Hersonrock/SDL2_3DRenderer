@@ -152,7 +152,7 @@ static void render(void) {
 
 	size_t num_triangles = array_length(triangles_to_render);
 	for (size_t i = 0; i < num_triangles; i++) {
-		draw_triangle(triangles_to_render[i],4, 0xFFFFFFFF);
+		draw_triangle(triangles_to_render[i], 0xFFFFFFFF);
 	}
 	array_free(triangles_to_render);
 	triangles_to_render = NULL;
