@@ -34,7 +34,6 @@ static void setup(void) {
 	color_buffer = (uint32_t*)malloc(window_width * window_height * sizeof(uint32_t));
 
 	color_buffer_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, window_width, window_height);
-	//load_cube_mesh_data();
 	load_obj_file_data(filename);
 }
 

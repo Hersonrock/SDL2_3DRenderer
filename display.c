@@ -173,26 +173,6 @@ void draw_triangle(triangle_t triangle, uint32_t color) {
 	}
 }
 
-void generate_3Dcube_points(uint32_t size, vec3_t* points) {
-	uint32_t point_count = 0;
-	float step = 2.0f / (size - 1);
-
-	for (uint32_t i = 0; i < size; i++) {
-		for (uint32_t j = 0; j < size; j++) {
-			for (uint32_t k = 0; k < size; k++) {
-				vec3_t p = {
-					.x = -1.0f + i * step,
-					.y = -1.0f + j * step,
-					.z = -1.0f + k * step
-				};
-				points[point_count++] = p;
-			}
-		}
-	}
-}
-
-
-
 void color_buffer_clear(uint32_t color) {
 	for (size_t y = 0; y < window_height; y++) {
 		for (size_t x = 0; x < window_width; x++) {
