@@ -10,6 +10,7 @@
 #include "triangle.h"
 #include "array.h"
 #include "mesh.h"
+#include "objects.h"
 
 // n x n x n Cube////////////////////////////////////////////////
 #define CUBE_POINTS 9                                          //
@@ -26,7 +27,7 @@ extern uint32_t window_width;
 extern uint32_t window_height;
 
 extern uint32_t* color_buffer;
-extern triangle_t* triangles_to_render;
+extern triangle_t** triangles_to_render;
 
 bool initialize_window(void);
 

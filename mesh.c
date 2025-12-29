@@ -1,9 +1,9 @@
 #include "mesh.h"
+mesh_t* meshes = NULL;
 
-vec3_t* obj_vertices = NULL;
-face_t* obj_faces = NULL;
-  
-void load_obj_file_data(char* filename) {
+void load_obj_file_data(char* filename, mesh_t* in_mesh) {
 	FILE* fd = open_file(filename);
-	read_file(fd, &mesh.vertices, &mesh.faces);
+	in_mesh->vertices = NULL;
+	in_mesh->faces = NULL;
+	read_file(fd, &in_mesh->vertices, &in_mesh->faces);
 }

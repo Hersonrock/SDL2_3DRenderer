@@ -11,6 +11,7 @@ uint32_t window_width = 0;
 uint32_t window_height = 0;
 
 uint32_t* color_buffer = NULL;
+triangle_t** triangles_to_render = NULL;
 
 bool initialize_window(void) {
 
@@ -199,7 +200,32 @@ void destroy_window(void) {
 }
 
 void free_resources(void) {
-	array_free(triangles_to_render);
-	array_free(mesh.faces);
-	array_free(mesh.vertices);
+
+	// Free per-mesh dynamic data
+	if (meshes) {
+		size_t mesh_count = array_length(meshes);
+		for (size_t i = 0; i < mesh_count; i++) {
+			array_free(meshes[i].vertices);
+			array_free(meshes[i].faces);
+			meshes[i].vertices = NULL;
+			meshes[i].faces = NULL;
+		}
+		array_free(meshes);
+		meshes = NULL;
+	}
+
+	// Free triangle lists (per frame buffers)
+	if (triangles_to_render) {
+		size_t obj_count = object_count;
+		for (size_t i = 0; i < obj_count; i++) {
+			array_free(triangles_to_render[i]);
+			triangles_to_render[i] = NULL;
+		}
+		free(triangles_to_render);
+		triangles_to_render = NULL;
+	}
+
+	// Filenames (if owned)
+	array_free(filenames);
+	filenames = NULL;
 }

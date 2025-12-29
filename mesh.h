@@ -11,9 +11,8 @@ typedef struct {
 	vec3_t rotation;
 }mesh_t;
 
-extern mesh_t mesh;
+extern mesh_t* meshes;
 
-void load_cube_mesh_data(void);
-void load_obj_file_data(char* filename);
+void load_obj_file_data(char* filename, mesh_t* in_mesh);
 
 #endif // MESH_H
