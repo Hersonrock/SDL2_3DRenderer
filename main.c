@@ -7,7 +7,7 @@
 
 #define FPS 30
 #define FRAME_TARGET_TIME (1000 / FPS)
-
+#define TOLERANCE	0.1
 bool is_running = false;
 int32_t previous_frame_time = 0;
 
@@ -110,6 +110,19 @@ vec2_t screen_transform(vec3_t point) {
 	return transformed_point;
 }
 
+bool backface_culling(vec3_t* vertices, vec3_t camera_pos) {
+	vec3_t vec_ab = vect3_sub(vertices[0], vertices[1]);
+	vec3_t vec_bc = vect3_sub(vertices[2], vertices[1]);
+	vec3_t face_normal = vect3_cross(vec_bc, vec_ab);
+
+	vect3_normalize(&face_normal);
+	vec3_t face_to_camera = vect3_sub(camera_pos, vertices[1]);
+	vect3_normalize(&face_to_camera);
+	float alignment = vect3_dot(face_normal, face_to_camera);
+
+	return  (alignment <= TOLERANCE);
+}
+
 static void update(void) {
 
 	int32_t time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - previous_frame_time);
@@ -133,7 +146,12 @@ static void update(void) {
 				world_space_points[j] = world_transform(face_vertices[j], meshes[w]); // World Space transform
 				view_space_points[j] = view_transform(world_space_points[j]); // View Space transform
 				// No clip space or NDC (Normalized device coordinates)
-
+			}
+			if (backface_culling(view_space_points, camera_position)) {
+				continue;
+			}
+			
+			for (size_t j = 0; j < TRI; j++) {
 				// Perspective_project + FOV Scaling + Translation
 				screen_space_points[j] = screen_transform(view_space_points[j]);
 				transformed_triangle.points[j] = screen_space_points[j];
