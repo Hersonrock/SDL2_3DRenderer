@@ -7,7 +7,7 @@
 
 #define FPS 30
 #define FRAME_TARGET_TIME (1000 / FPS)
-
+#define EPSILON        1e-8f
 bool is_running = false;
 int32_t previous_frame_time = 0;
 
@@ -110,6 +110,20 @@ vec2_t screen_transform(vec3_t point) {
 	return transformed_point;
 }
 
+bool backface_culling(vec3_t* points) {
+
+	vec3_t a = vect3_sub(points[1], points[0]);
+	vec3_t b = vect3_sub(points[2], points[0]);
+
+	vec3_t normal = vect3_cross(b, a);
+	if (vect3_dot(normal, normal) < EPSILON) //Check for degenerate Triangles.
+		return true;
+
+	vec3_t face_to_camera = points[0];
+
+	return vect3_dot(normal, face_to_camera) <= 0;
+}
+
 static void update(void) {
 
 	int32_t time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - previous_frame_time);
@@ -133,7 +147,10 @@ static void update(void) {
 				world_space_points[j] = world_transform(face_vertices[j], meshes[w]); // World Space transform
 				view_space_points[j] = view_transform(world_space_points[j]); // View Space transform
 				// No clip space or NDC (Normalized device coordinates)
-
+			}
+			if (backface_culling(view_space_points)) continue;
+			
+			for (size_t j = 0; j < TRI; j++) {
 				// Perspective_project + FOV Scaling + Translation
 				screen_space_points[j] = screen_transform(view_space_points[j]);
 				transformed_triangle.points[j] = screen_space_points[j];
