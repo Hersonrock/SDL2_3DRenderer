@@ -175,6 +175,7 @@
     <ClCompile Include="mesh.c" />
     <ClCompile Include="objects.c" />
     <ClCompile Include="test.c" />
+    <ClCompile Include="transform.c" />
     <ClCompile Include="triangle.c" />
     <ClCompile Include="vector.c" />
   </ItemGroup>
@@ -186,6 +187,7 @@
     <ClInclude Include="mesh.h" />
     <ClInclude Include="objects.h" />
     <ClInclude Include="test.h" />
+    <ClInclude Include="transform.h" />
     <ClInclude Include="triangle.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>
