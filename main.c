@@ -7,12 +7,12 @@
 
 #define FPS 30
 #define FRAME_TARGET_TIME (1000 / FPS)
-#define TOLERANCE	0.1
 bool is_running = false;
 int32_t previous_frame_time = 0;
 
 vec3_t world_space_points[TRI];
 vec3_t view_space_points[TRI];
+vec3_t clip_space_points[TRI];
 vec2_t screen_space_points[TRI];
 
 vec3_t camera_position = { .x = 0, .y = 0, .z = -5 };
@@ -25,6 +25,7 @@ static void setup(void) {
 
 	color_buffer_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, window_width, window_height);
 
+	array_push(filenames, "./assets/cube1.obj");
 	array_push(filenames, "./assets/cube1.obj");
 
 	object_count = (size_t)array_length(filenames);
@@ -98,14 +99,25 @@ vec2_t screen_transform(vec3_t point) {
 	/*Screen space transform
 	Fov change, is more of a conceptual zoom all points change at the same rate.
 	Translation is also a screen space transform as it is done after the points are moved into 2D.
-	 I'm pilling up many tranformations here as screen transformations and they really are not, 
+	 I'm pilling up many tranformations here as screen transformations and they really are not,
 	 such as the scaling times fov_factor is more of a Clip Space transform.
 	 In the same place the perspective divide / point.z is more of a NDC
 	*/
 
 	vec2_t transformed_point = {
-		.x = ((point.x * fov_factor) / point.z) + window_width/2,
-		.y = ((point.y * fov_factor) / point.z) + window_height/2
+		.x = point.x + window_width * 0.5,
+		.y = point.y + window_height * 0.5
+	};
+	return transformed_point;
+}
+
+vec3_t clip_transform(vec3_t point) {
+
+	float projection_factor = point.z;
+	vec3_t transformed_point = {
+		.x = (point.x * fov_factor) / projection_factor,
+		.y = (point.y * fov_factor) / projection_factor,
+		.z = (point.z * fov_factor) / projection_factor
 	};
 	return transformed_point;
 }
@@ -114,13 +126,10 @@ bool backface_culling(vec3_t* vertices, vec3_t camera_pos) {
 	vec3_t vec_ab = vect3_sub(vertices[0], vertices[1]);
 	vec3_t vec_bc = vect3_sub(vertices[2], vertices[1]);
 	vec3_t face_normal = vect3_cross(vec_bc, vec_ab);
-
-	vect3_normalize(&face_normal);
 	vec3_t face_to_camera = vect3_sub(camera_pos, vertices[1]);
-	vect3_normalize(&face_to_camera);
 	float alignment = vect3_dot(face_normal, face_to_camera);
 
-	return  (alignment <= TOLERANCE);
+	return  (alignment <= 0);
 }
 
 static void update(void) {
@@ -140,20 +149,23 @@ static void update(void) {
 			face_vertices[1] = meshes[w].vertices[meshes[w].faces[i].b - 1];
 			face_vertices[2] = meshes[w].vertices[meshes[w].faces[i].c - 1];
 
-			triangle_t transformed_triangle; 
-			
+			triangle_t transformed_triangle;
+
 			for (size_t j = 0; j < TRI; j++) {
 				world_space_points[j] = world_transform(face_vertices[j], meshes[w]); // World Space transform
 				view_space_points[j] = view_transform(world_space_points[j]); // View Space transform
-				// No clip space or NDC (Normalized device coordinates)
+				clip_space_points[j] = clip_transform(view_space_points[j]);
+				// Not a real clip space or NDC (Normalized device coordinates) transform
 			}
-			if (backface_culling(view_space_points, camera_position)) {
+
+			if (backface_culling(clip_space_points, camera_position)) {
 				continue;
 			}
-			
+
+
 			for (size_t j = 0; j < TRI; j++) {
-				// Perspective_project + FOV Scaling + Translation
-				screen_space_points[j] = screen_transform(view_space_points[j]);
+				//  Translation 
+				screen_space_points[j] = screen_transform(clip_space_points[j]);
 				transformed_triangle.points[j] = screen_space_points[j];
 			}
 			array_push(triangles_to_render[w], transformed_triangle);
@@ -162,7 +174,7 @@ static void update(void) {
 			.x = meshes[w].rotation.x + rotation_delta,
 			.y = meshes[w].rotation.y + rotation_delta,
 			.z = meshes[w].rotation.z + rotation_delta
-			};
+		};
 	}
 }
 
