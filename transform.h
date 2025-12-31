@@ -1,0 +1,21 @@
+#ifndef  TRANSFORM_H
+#define TRANSFORM_H
+
+#include "stdbool.h"
+#include "matrix.h"
+#include "vector.h"
+#include "mesh.h"
+#include "display.h"
+
+extern vec3_t camera_position;
+extern float fov_factor;
+
+vec3_t world_transform(vec3_t point, mesh_t in_mesh);
+vec3_t view_transform(vec3_t point);
+
+vec2_t screen_transform(vec3_t point);
+vec3_t clip_transform(vec3_t point);
+bool backface_culling(vec3_t * vertices, vec3_t camera_pos);
+
+
+#endif // ! TRANSFORM_H
