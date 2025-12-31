@@ -201,22 +201,22 @@ void destroy_window(void) {
 
 void free_resources(void) {
 
+	size_t obj_count = object_count;
+
 	// Free per-mesh dynamic data
 	if (meshes) {
-		size_t mesh_count = array_length(meshes);
-		for (size_t i = 0; i < mesh_count; i++) {
+		for (size_t i = 0; i < obj_count; i++) {
 			array_free(meshes[i].vertices);
 			array_free(meshes[i].faces);
 			meshes[i].vertices = NULL;
 			meshes[i].faces = NULL;
 		}
-		array_free(meshes);
+		free(meshes);
 		meshes = NULL;
 	}
 
 	// Free triangle lists (per frame buffers)
 	if (triangles_to_render) {
-		size_t obj_count = object_count;
 		for (size_t i = 0; i < obj_count; i++) {
 			array_free(triangles_to_render[i]);
 			triangles_to_render[i] = NULL;
