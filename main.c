@@ -26,7 +26,6 @@ static void setup(void) {
 	color_buffer_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, window_width, window_height);
 
 	array_push(filenames, "./assets/cube1.obj");
-	array_push(filenames, "./assets/cube1.obj");
 
 	object_count = (size_t)array_length(filenames);
 
