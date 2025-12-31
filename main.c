@@ -4,6 +4,7 @@
 #include "test.h"
 #include "array.h"
 #include "objects.h"
+#include "transform.h"
 
 #define FPS 30
 #define FRAME_TARGET_TIME (1000 / FPS)
@@ -14,9 +15,6 @@ int32_t previous_frame_time = 0;
 vec3_t world_space_points[TRI];
 vec3_t view_space_points[TRI];
 vec2_t screen_space_points[TRI];
-
-vec3_t camera_position = { .x = 0, .y = 0, .z = -5 };
-float fov_factor = 640.0f;
 
 float rotation_delta = 0.05;
 
@@ -58,70 +56,6 @@ static void process_input(void) {
 		break;
 	}
 
-}
-
-vec3_t world_transform(vec3_t point, mesh_t in_mesh) {
-	/*	These are here to clarify behavior, since I'm rendering a single objec
-		world transforms really carry no meaning since there is no reference point.
-		but in case they do, they are here.
-	*/
-	vec3_t transformed_point = {
-		.x = point.x,
-		.y = point.y,
-		.z = point.z,
-	};
-
-	mat3_t rotation_mat3_z = make_rotation_mat3_z(in_mesh.rotation.z);
-	mat3_t rotation_mat3_x = make_rotation_mat3_x(in_mesh.rotation.x);
-	mat3_t rotation_mat3_y = make_rotation_mat3_y(in_mesh.rotation.y);
-
-	transformed_point = mat3_mult_vec3(rotation_mat3_z, transformed_point); // roll
-	transformed_point = mat3_mult_vec3(rotation_mat3_x, transformed_point); // pitch
-	transformed_point = mat3_mult_vec3(rotation_mat3_y, transformed_point); // yaw
-
-	return transformed_point;
-}
-
-vec3_t view_transform(vec3_t point) {
-	/*	Dolly , the actual camera moves. Objects closer change aparent size faster than those far away.
-	*/
-	vec3_t transformed_point = {
-		.x = point.x,
-		.y = point.y,
-		.z = point.z - camera_position.z
-	};
-	return transformed_point;
-}
-
-vec2_t screen_transform(vec3_t point) {
-
-	/*Screen space transform
-	Fov change, is more of a conceptual zoom all points change at the same rate.
-	Translation is also a screen space transform as it is done after the points are moved into 2D.
-	 I'm pilling up many tranformations here as screen transformations and they really are not, 
-	 such as the scaling times fov_factor is more of a Clip Space transform.
-	 In the same place the perspective divide / point.z is more of a NDC
-	*/
-
-	vec2_t transformed_point = {
-		.x = ((point.x * fov_factor) / point.z) + window_width/2,
-		.y = ((point.y * fov_factor) / point.z) + window_height/2
-	};
-	return transformed_point;
-}
-
-bool backface_culling(vec3_t* points) {
-
-	vec3_t a = vect3_sub(points[1], points[0]);
-	vec3_t b = vect3_sub(points[2], points[0]);
-
-	vec3_t normal = vect3_cross(b, a);
-	if (vect3_dot(normal, normal) < EPSILON) //Check for degenerate Triangles.
-		return true;
-
-	vec3_t face_to_camera = points[0];
-
-	return vect3_dot(normal, face_to_camera) <= 0;
 }
 
 static void update(void) {
