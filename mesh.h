@@ -1,8 +1,8 @@
 #ifndef MESH_H
 #define MESH_H
-#include "vector.h"
 #include "triangle.h"
 #include "array.h"
+#include "vector.h"
 #include "load.h"
 
 typedef struct {

@@ -2,11 +2,11 @@
 #define TRANSFORM_H
 #define EPSILON        1e-8f
 
-#include "stdbool.h"
+#include <stdbool.h>
 #include "matrix.h"
-#include "vector.h"
 #include "mesh.h"
-#include "display.h"
+#include "vector.h"
+#include "viewport.h"
 
 extern vec3_t camera_position;
 extern float fov_factor;

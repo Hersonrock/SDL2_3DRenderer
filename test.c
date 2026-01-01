@@ -3,9 +3,9 @@
 
 int circle_line_test(void) {
 
-	uint32_t cx = window_width / 2;
-	uint32_t cy = window_height / 2;
-	uint32_t r = (window_height - window_height * 0.1) / 2;
+	uint32_t cx = viewport.width / 2;
+	uint32_t cy = viewport.height / 2;
+	uint32_t r = (viewport.height - viewport.height * 0.1) / 2;
 	uint32_t white = 0xFFFFFFFF;
 
 	//There should be 16 lines, starting at the center of the screen and ending at the edge of a circle. Let see
