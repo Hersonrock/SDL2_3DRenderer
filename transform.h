@@ -11,7 +11,7 @@
 extern vec3_t camera_position;
 extern float fov_factor;
 
-vec3_t world_transform(vec3_t point, mesh_t in_mesh);
+vec3_t world_transform(vec3_t point, vec3_t rotation);
 vec3_t view_transform(vec3_t point);
 
 vec2_t screen_transform(vec3_t point);

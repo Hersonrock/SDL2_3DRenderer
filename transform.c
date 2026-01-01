@@ -3,7 +3,7 @@
 vec3_t camera_position = { .x = 0, .y = 0, .z = -5 };
 float fov_factor = 640.0f;
 
-vec3_t world_transform(vec3_t point, mesh_t in_mesh) {
+vec3_t world_transform(vec3_t point, vec3_t rotation) {
 	/*	These are here to clarify behavior, since I'm rendering a single objec
 		world transforms really carry no meaning since there is no reference point.
 		but in case they do, they are here.
@@ -14,9 +14,9 @@ vec3_t world_transform(vec3_t point, mesh_t in_mesh) {
 		.z = point.z,
 	};
 
-	mat3_t rotation_mat3_z = make_rotation_mat3_z(in_mesh.rotation.z);
-	mat3_t rotation_mat3_x = make_rotation_mat3_x(in_mesh.rotation.x);
-	mat3_t rotation_mat3_y = make_rotation_mat3_y(in_mesh.rotation.y);
+	mat3_t rotation_mat3_z = make_rotation_mat3_z(rotation.z);
+	mat3_t rotation_mat3_x = make_rotation_mat3_x(rotation.x);
+	mat3_t rotation_mat3_y = make_rotation_mat3_y(rotation.y);
 
 	transformed_point = mat3_mult_vec3(rotation_mat3_z, transformed_point); // roll
 	transformed_point = mat3_mult_vec3(rotation_mat3_x, transformed_point); // pitch
