@@ -5,8 +5,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdint.h>
-#include "vector.h"
 #include "triangle.h"
+#include "vector.h"
 #include "array.h"
 
 #define MAX_LINE_SIZE 1024

@@ -7,9 +7,6 @@ SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 SDL_Texture* color_buffer_texture = NULL;
 
-uint32_t window_width = 0;
-uint32_t window_height = 0;
-
 uint32_t* color_buffer = NULL;
 triangle_t** triangles_to_render = NULL;
 
@@ -26,27 +23,27 @@ bool initialize_window(void) {
 	}
 
 #ifdef FULL_SCREEN
-	window_width = (int)display_mode.w;
-	window_height = (int)display_mode.h;
+	viewport.width = (int)display_mode.w;
+	viewport.height = (int)display_mode.h;
 
 	window = SDL_CreateWindow(
 		NULL,
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
-		window_width,
-		window_height,
+		viewport.width,
+		viewport.height,
 		SDL_WINDOW_BORDERLESS
 	);
 #else
-	window_width = (int)display_mode.w * 0.8;
-	window_height = (int)display_mode.h * 0.8;
+	viewport.width = (int)display_mode.w * 0.8;
+	viewport.height = (int)display_mode.h * 0.8;
 
 	window = SDL_CreateWindow(
 		NULL,
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
-		window_width,
-		window_height,
+		viewport.width,
+		viewport.height,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
 	);
 #endif // FULL_SCREEN
@@ -71,12 +68,12 @@ bool initialize_window(void) {
 
 
 void draw_pixel(uint32_t x, uint32_t y, uint32_t color) {
-	if (x < window_width && y < window_height) {
-		color_buffer[(window_width * y) + x] = color;
+	if (x < viewport.width && y < viewport.height) {
+		color_buffer[(viewport.width * y) + x] = color;
 	}
 	else
 	{
-		printf("Pixel Bound Error (%dx%d)(%d,%d)\n", window_width, window_height,x, y);
+		printf("Pixel Bound Error (%dx%d)(%d,%d)\n", viewport.width, viewport.height,x, y);
 	}
 }
 
@@ -113,8 +110,8 @@ void draw_line(int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t color) {
 
 void draw_grid_line(uint32_t step, uint32_t color) {
 
-	uint32_t w_h = window_height - 2;
-	uint32_t w_w = window_width - 2;
+	uint32_t w_h = viewport.height - 2;
+	uint32_t w_w = viewport.width - 2;
 	uint32_t i = 0;
 	uint32_t j = 0;
 
@@ -140,13 +137,13 @@ void draw_grid_line(uint32_t step, uint32_t color) {
 
 void draw_grid_points(uint32_t step, uint32_t color) {
 
-	uint32_t w_h = window_height - 2;
-	uint32_t w_w = window_width - 2;
+	uint32_t w_h = viewport.height - 2;
+	uint32_t w_w = viewport.width - 2;
 
 	for (size_t j = 0; j <= w_h; j++) {
 		for (size_t i = 0; i <= w_w; i++) {
 			if (j % step == 0 && i % step == 0) {
-				color_buffer[(window_width * j) + i] = color;
+				color_buffer[(viewport.width * j) + i] = color;
 			}
 		}
 	}
@@ -174,17 +171,30 @@ void draw_triangle(triangle_t triangle, uint32_t color) {
 	}
 }
 
+void draw_objects(triangle_t** triangles_to_render, uint32_t object_count) {
+	for (size_t w = 0; w < object_count; w++) {
+
+		size_t num_triangles = array_length(triangles_to_render[w]);
+		for (size_t i = 0; i < num_triangles; i++) {
+			draw_triangle(triangles_to_render[w][i], 0xFFFFFFFF);
+		}
+		array_free(triangles_to_render[w]);
+		triangles_to_render[w] = NULL;
+	}
+}
+
+
 void color_buffer_clear(uint32_t color) {
-	for (size_t y = 0; y < window_height; y++) {
-		for (size_t x = 0; x < window_width; x++) {
-			color_buffer[(window_width * y) + x] = color;
+	for (size_t y = 0; y < viewport.height; y++) {
+		for (size_t x = 0; x < viewport.width; x++) {
+			color_buffer[(viewport.width * y) + x] = color;
 		}
 	}
 }
 
 void color_buffer_render(void) {
 
-	SDL_UpdateTexture(color_buffer_texture, NULL, color_buffer, (int)(window_width * sizeof(uint32_t)));
+	SDL_UpdateTexture(color_buffer_texture, NULL, color_buffer, (int)(viewport.width * sizeof(uint32_t)));
 
 	SDL_RenderCopy(renderer, color_buffer_texture, NULL, NULL);
 
@@ -199,13 +209,10 @@ void destroy_window(void) {
 	SDL_Quit();
 }
 
-void free_resources(void) {
-
-	size_t obj_count = object_count;
-
+void free_resources(uint32_t object_count, char** filenames) {
 	// Free per-mesh dynamic data
 	if (meshes) {
-		for (size_t i = 0; i < obj_count; i++) {
+		for (size_t i = 0; i < object_count; i++) {
 			array_free(meshes[i].vertices);
 			array_free(meshes[i].faces);
 			meshes[i].vertices = NULL;
@@ -217,7 +224,7 @@ void free_resources(void) {
 
 	// Free triangle lists (per frame buffers)
 	if (triangles_to_render) {
-		for (size_t i = 0; i < obj_count; i++) {
+		for (size_t i = 0; i < object_count; i++) {
 			array_free(triangles_to_render[i]);
 			triangles_to_render[i] = NULL;
 		}

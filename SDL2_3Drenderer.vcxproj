@@ -178,6 +178,7 @@
     <ClCompile Include="transform.c" />
     <ClCompile Include="triangle.c" />
     <ClCompile Include="vector.c" />
+    <ClCompile Include="viewport.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="array.h" />
@@ -190,6 +191,7 @@
     <ClInclude Include="transform.h" />
     <ClInclude Include="triangle.h" />
     <ClInclude Include="vector.h" />
+    <ClInclude Include="viewport.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

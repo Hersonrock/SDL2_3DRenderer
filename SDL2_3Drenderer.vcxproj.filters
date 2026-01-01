@@ -48,6 +48,9 @@
     <ClCompile Include="transform.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="viewport.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="display.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="viewport.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

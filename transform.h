@@ -1,11 +1,11 @@
 #ifndef  TRANSFORM_H
 #define TRANSFORM_H
 
-#include "stdbool.h"
+#include <stdbool.h>
 #include "matrix.h"
-#include "vector.h"
 #include "mesh.h"
-#include "display.h"
+#include "vector.h"
+#include "viewport.h"
 
 extern vec3_t camera_position;
 extern float fov_factor;

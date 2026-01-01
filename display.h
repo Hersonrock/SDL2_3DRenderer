@@ -6,11 +6,10 @@
 #include <stdint.h>
 #include <SDL.h>
 #include <assert.h>
-#include "vector.h"
 #include "triangle.h"
 #include "array.h"
 #include "mesh.h"
-#include "objects.h"
+#include "viewport.h"
 
 // n x n x n Cube////////////////////////////////////////////////
 #define CUBE_POINTS 9                                          //
@@ -23,9 +22,6 @@ extern SDL_Window* window;
 extern SDL_Renderer* renderer;
 extern SDL_Texture* color_buffer_texture;
 
-extern uint32_t window_width;
-extern uint32_t window_height;
-
 extern uint32_t* color_buffer;
 extern triangle_t** triangles_to_render;
 
@@ -37,11 +33,12 @@ void draw_grid_line(uint32_t step, uint32_t color);
 void draw_grid_points(uint32_t step, uint32_t color);
 void draw_rectangle(uint32_t x, uint32_t y, uint32_t width, uint32_t height, uint32_t color);
 void draw_triangle(triangle_t triangle, uint32_t color);
+void draw_objects(triangle_t** triangles_to_render, uint32_t object_count);
 
 void color_buffer_clear(uint32_t color);
 void color_buffer_render(void);
 
 void destroy_window(void);
-void free_resources(void);
+void free_resources(uint32_t object_count, char** filenames);
 
 #endif // DISPLAY

@@ -3,18 +3,6 @@
 char** filenames = NULL;
 size_t object_count = 0;
 
-void draw_objects(triangle_t** triangles_to_render) {
-	for (size_t w = 0; w < object_count; w++) {
-
-		size_t num_triangles = array_length(triangles_to_render[w]);
-		for (size_t i = 0; i < num_triangles; i++) {
-			draw_triangle(triangles_to_render[w][i], 0xFFFFFFFF);
-		}
-		array_free(triangles_to_render[w]);
-		triangles_to_render[w] = NULL;
-	}
-}
-
 void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh) {
 	vec3_t world_space_points[TRI];
 	vec3_t view_space_points[TRI];
