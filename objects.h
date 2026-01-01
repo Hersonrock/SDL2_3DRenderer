@@ -2,7 +2,6 @@
 #define OBJECTS_H
 #include "mesh.h"
 #include "triangle.h"
-#include "display.h"
 #include "transform.h"
 
 extern char**  filenames;
