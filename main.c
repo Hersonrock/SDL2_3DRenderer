@@ -11,11 +11,6 @@
 bool is_running = false;
 int32_t previous_frame_time = 0;
 
-vec3_t world_space_points[TRI];
-vec3_t view_space_points[TRI];
-vec3_t clip_space_points[TRI];
-vec2_t screen_space_points[TRI];
-
 float rotation_delta = 0.05;
 
 static void setup(void) {
@@ -69,33 +64,8 @@ static void update(void) {
 
 	for (size_t w = 0; w < object_count; w++) {
 
-		for (size_t i = 0; i < (size_t)array_length(meshes[w].faces); i++) {
-			vec3_t face_vertices[TRI];
-			face_vertices[0] = meshes[w].vertices[meshes[w].faces[i].a - 1];
-			face_vertices[1] = meshes[w].vertices[meshes[w].faces[i].b - 1];
-			face_vertices[2] = meshes[w].vertices[meshes[w].faces[i].c - 1];
+		perform_transforms(&meshes[w], &triangles_to_render[w]);
 
-			triangle_t transformed_triangle;
-
-			for (size_t j = 0; j < TRI; j++) {
-				world_space_points[j] = world_transform(face_vertices[j], meshes[w]); // World Space transform
-				view_space_points[j] = view_transform(world_space_points[j]); // View Space transform
-				clip_space_points[j] = clip_transform(view_space_points[j]);
-				// Not a real clip space or NDC (Normalized device coordinates) transform
-			}
-
-			if (backface_culling(clip_space_points, camera_position)) {
-				continue;
-			}
-
-
-			for (size_t j = 0; j < TRI; j++) {
-				//  Translation 
-				screen_space_points[j] = screen_transform(clip_space_points[j]);
-				transformed_triangle.points[j] = screen_space_points[j];
-			}
-			array_push(triangles_to_render[w], transformed_triangle);
-		}
 		meshes[w].rotation = (vec3_t){
 			.x = meshes[w].rotation.x + rotation_delta,
 			.y = meshes[w].rotation.y + rotation_delta,
@@ -108,15 +78,7 @@ static void render(void) {
 	SDL_SetRenderDrawColor(renderer, 0, 100, 100, 255);
 	SDL_RenderClear(renderer);
 
-	for (size_t w = 0; w < object_count; w++) {
-
-		size_t num_triangles = array_length(triangles_to_render[w]);
-		for (size_t i = 0; i < num_triangles; i++) {
-			draw_triangle(triangles_to_render[w][i], 0xFFFFFFFF);
-		}
-		array_free(triangles_to_render[w]);
-		triangles_to_render[w] = NULL;
-	}
+	draw_objects(triangles_to_render);
 
 	color_buffer_render();
 	color_buffer_clear(0xFF000000);
