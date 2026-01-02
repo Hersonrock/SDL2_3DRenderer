@@ -3,8 +3,8 @@
 #include <stdint.h>
 
 typedef struct {
-	uint32_t width;
-	uint32_t height;
+	uint32_t w;
+	uint32_t h;
 }viewport_t;
 
 extern viewport_t viewport;

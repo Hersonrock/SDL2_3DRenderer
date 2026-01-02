@@ -5,6 +5,7 @@
 #include "array.h"
 #include "objects.h"
 #include "transform.h"
+#include "renderer.h"
 
 #define FPS 30
 #define FRAME_TARGET_TIME (1000 / FPS)
@@ -14,10 +15,7 @@ int32_t previous_frame_time = 0;
 
 float rotation_delta = 0.05;
 
-static void setup(void) {
-	color_buffer = (uint32_t*)malloc(viewport.width * viewport.height * sizeof(uint32_t));
-
-	color_buffer_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, viewport.width, viewport.height);
+void setup(void) {
 
 	array_push(filenames, "./assets/cube.obj");
 
@@ -80,7 +78,6 @@ static void render(void) {
 	SDL_RenderClear(renderer);
 
 	draw_objects(triangles_to_render, object_count);
-
 	color_buffer_render();
 	color_buffer_clear(0xFF000000);
 
@@ -91,7 +88,7 @@ int main(int argc, char* argv[]) {
 
 	(void)argc;
 	(void)argv;
-	is_running = initialize_window();
+	is_running = initialize_window() && initialize_renderer(window);
 
 	setup();
 
@@ -102,6 +99,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	destroy_window();
+	renderer_shutdown();
 	free_resources(object_count, filenames);
 
 	return 0;
