@@ -1,4 +1,6 @@
 #include "vector.h"
+#include <assert.h>
+#include <math.h>
 
 /////////////////////VECTOR 2D//////////////////
 float vect2_length(vec2_t v) {

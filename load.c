@@ -1,4 +1,5 @@
 #include "load.h"
+#include "array.h"
 
 FILE* open_file(char* filename) {
 	FILE* fd = NULL;

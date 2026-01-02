@@ -1,4 +1,7 @@
 #include "objects.h"
+#include "array.h"
+#include "transform.h"
+#include "vector.h"
 
 char** filenames = NULL;
 triangle_t** triangles_to_render = NULL;

@@ -1,4 +1,6 @@
 #include "display.h"
+#include "viewport.h"
+#include <assert.h>
 
 SDL_DisplayMode display_mode;
 SDL_Window* window = NULL;

@@ -1,9 +1,6 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-
-#include <math.h>
-#include <stdint.h>
 #include "vector.h"
 
 typedef struct {

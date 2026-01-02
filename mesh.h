@@ -3,9 +3,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include "array.h"
 #include "vector.h"
-
 
 typedef struct {
 	int a;

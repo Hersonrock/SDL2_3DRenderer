@@ -7,7 +7,6 @@
 #include <stdint.h>
 #include "mesh.h"
 #include "vector.h"
-#include "array.h"
 
 #define MAX_LINE_SIZE 1024
 
