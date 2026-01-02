@@ -1,11 +1,11 @@
 #include "test.h"
-#include "display.h"
+#include "renderer.h"
 
 int circle_line_test(void) {
 
-	uint32_t cx = viewport.width / 2;
-	uint32_t cy = viewport.height / 2;
-	uint32_t r = (viewport.height - viewport.height * 0.1) / 2;
+	uint32_t cx = viewport.w / 2;
+	uint32_t cy = viewport.h / 2;
+	uint32_t r = (viewport.h - viewport.h * 0.1) / 2;
 	uint32_t white = 0xFFFFFFFF;
 
 	//There should be 16 lines, starting at the center of the screen and ending at the edge of a circle. Let see

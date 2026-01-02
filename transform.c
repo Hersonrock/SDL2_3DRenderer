@@ -47,8 +47,8 @@ vec2_t screen_transform(vec3_t point) {
 	*/
 
 	vec2_t transformed_point = {
-		.x = point.x + viewport.width * 0.5f,
-		.y = point.y + viewport.height * 0.5f
+		.x = point.x + viewport.w * 0.5f,
+		.y = point.y + viewport.h * 0.5f
 	};
 	return transformed_point;
 }
