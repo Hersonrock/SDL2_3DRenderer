@@ -1,5 +1,6 @@
 #include "test.h"
 #include "renderer.h"
+#include "viewport.h"
 
 int circle_line_test(void) {
 

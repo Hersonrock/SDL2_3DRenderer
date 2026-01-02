@@ -1,4 +1,5 @@
 #include "mesh.h"
+#include "array.h"
 mesh_t* meshes = NULL;
 
 void free_meshes(uint32_t object_count) {

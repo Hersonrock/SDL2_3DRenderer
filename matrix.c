@@ -1,4 +1,6 @@
 ﻿#include "matrix.h"
+#include <math.h>
+#include <stdint.h>
 
 mat3_t mat3_identity(void) {
 /*

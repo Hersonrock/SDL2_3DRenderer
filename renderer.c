@@ -1,4 +1,7 @@
+#include <assert.h>
 #include "renderer.h"
+#include "viewport.h"
+#include "array.h"
 
 SDL_Renderer* renderer = NULL;
 uint32_t* color_buffer = NULL;

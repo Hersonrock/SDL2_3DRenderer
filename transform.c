@@ -1,4 +1,6 @@
 #include "transform.h"
+#include "matrix.h"
+#include "viewport.h"
 
 vec3_t camera_position = { .x = 0, .y = 0, .z = -5 };
 float fov_factor = 640.0f;

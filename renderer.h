@@ -6,9 +6,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "SDL.h"
-#include "array.h"
 #include "triangle.h"
-#include "viewport.h"
 
 extern SDL_Renderer* renderer;
 extern uint32_t* color_buffer;
