@@ -48,3 +48,11 @@ bool read_file(FILE* obj_file_descriptor, vec3_t **out_vertices, face_t **out_fa
 	}
 	return true;
 }
+
+
+void load_obj_file_data(char* filename, mesh_t* in_mesh) {
+	FILE* fd = open_file(filename);
+	in_mesh->vertices = NULL;
+	in_mesh->faces = NULL;
+	read_file(fd, &in_mesh->vertices, &in_mesh->faces);
+}

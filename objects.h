@@ -8,7 +8,9 @@
 
 extern char**  filenames;
 extern size_t object_count;
+extern triangle_t** triangles_to_render;
 
 void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh);
+void free_objects();
 
 #endif //OBJECTS_H

@@ -1,9 +1,17 @@
 #ifndef MESH_H
 #define MESH_H
-#include "triangle.h"
+
+#include <stdint.h>
+#include <stdlib.h>
 #include "array.h"
 #include "vector.h"
-#include "load.h"
+
+
+typedef struct {
+	int a;
+	int b;
+	int c;
+}face_t;
 
 typedef struct {
 	vec3_t* vertices;
@@ -13,6 +21,6 @@ typedef struct {
 
 extern mesh_t* meshes;
 
-void load_obj_file_data(char* filename, mesh_t* in_mesh);
+void free_meshes(uint32_t object_count);
 
 #endif // MESH_H

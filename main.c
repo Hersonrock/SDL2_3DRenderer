@@ -1,6 +1,7 @@
 #include "display.h"
 #include "matrix.h"
 #include "mesh.h"
+#include "load.h"
 #include "test.h"
 #include "array.h"
 #include "objects.h"
@@ -61,15 +62,15 @@ static void update(void) {
 	}
 	previous_frame_time = SDL_GetTicks();
 
-	for (size_t w = 0; w < object_count; w++) {
+	for (size_t n = 0; n < object_count; n++) {
 
-		perform_transforms(&meshes[w], &triangles_to_render[w]);
+		perform_transforms(&meshes[n], &triangles_to_render[n]);
 
-		meshes[w].rotation = (vec3_t){
-			.x = meshes[w].rotation.x + rotation_delta,
-			.y = meshes[w].rotation.y + rotation_delta,
-			.z = meshes[w].rotation.z + rotation_delta
-			};
+		meshes[n].rotation = (vec3_t){
+			.x = meshes[n].rotation.x + rotation_delta,
+			.y = meshes[n].rotation.y + rotation_delta,
+			.z = meshes[n].rotation.z + rotation_delta
+		};
 	}
 }
 
@@ -100,7 +101,8 @@ int main(int argc, char* argv[]) {
 
 	destroy_window();
 	renderer_shutdown();
-	free_resources(object_count, filenames);
+	free_meshes(object_count);
+	free_objects();
 
 	return 0;
 }

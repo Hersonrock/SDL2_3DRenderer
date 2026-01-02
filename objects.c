@@ -1,6 +1,7 @@
 #include "objects.h"
 
 char** filenames = NULL;
+triangle_t** triangles_to_render = NULL;
 size_t object_count = 0;
 
 void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh) {
@@ -36,3 +37,18 @@ void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh) {
 
 }
 
+void free_objects() {
+	// Free triangle lists (per frame buffers)
+	if (triangles_to_render) {
+		for (size_t i = 0; i < object_count; i++) {
+			array_free(triangles_to_render[i]);
+			triangles_to_render[i] = NULL;
+		}
+		free(triangles_to_render);
+		triangles_to_render = NULL;
+	}
+
+	// Filenames (if owned)
+	array_free(filenames);
+	filenames = NULL;
+}
