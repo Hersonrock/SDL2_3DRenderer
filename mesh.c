@@ -1,9 +1,16 @@
 #include "mesh.h"
 mesh_t* meshes = NULL;
 
-void load_obj_file_data(char* filename, mesh_t* in_mesh) {
-	FILE* fd = open_file(filename);
-	in_mesh->vertices = NULL;
-	in_mesh->faces = NULL;
-	read_file(fd, &in_mesh->vertices, &in_mesh->faces);
+void free_meshes(uint32_t object_count) {
+	// Free per-mesh dynamic data
+	if (meshes) {
+		for (size_t i = 0; i < object_count; i++) {
+			array_free(meshes[i].vertices);
+			array_free(meshes[i].faces);
+			meshes[i].vertices = NULL;
+			meshes[i].faces = NULL;
+		}
+		free(meshes);
+		meshes = NULL;
+	}
 }

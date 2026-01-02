@@ -20,7 +20,7 @@ extern vec3_t cube_points[N_CUBE_POINTS];                             //
 extern SDL_DisplayMode display_mode;
 extern SDL_Window* window;
 
-extern triangle_t** triangles_to_render;
+
 
 bool initialize_window();
 

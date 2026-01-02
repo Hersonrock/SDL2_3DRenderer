@@ -2,7 +2,6 @@
 
 SDL_DisplayMode display_mode;
 SDL_Window* window = NULL;
-triangle_t** triangles_to_render = NULL;
 
 bool initialize_window() {
 
@@ -59,30 +58,3 @@ void destroy_window(void) {
 	SDL_Quit();
 }
 
-void free_resources(uint32_t object_count, char** filenames) {
-	// Free per-mesh dynamic data
-	if (meshes) {
-		for (size_t i = 0; i < object_count; i++) {
-			array_free(meshes[i].vertices);
-			array_free(meshes[i].faces);
-			meshes[i].vertices = NULL;
-			meshes[i].faces = NULL;
-		}
-		free(meshes);
-		meshes = NULL;
-	}
-
-	// Free triangle lists (per frame buffers)
-	if (triangles_to_render) {
-		for (size_t i = 0; i < object_count; i++) {
-			array_free(triangles_to_render[i]);
-			triangles_to_render[i] = NULL;
-		}
-		free(triangles_to_render);
-		triangles_to_render = NULL;
-	}
-
-	// Filenames (if owned)
-	array_free(filenames);
-	filenames = NULL;
-}
