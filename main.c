@@ -18,7 +18,12 @@ float rotation_delta = 0.05;
 
 void setup(void) {
 
-	array_push(filenames, "./assets/cube.obj");
+	filet_t filet;
+	//array_push(filenames, "./assets/cube1.obj");
+	//filet = OBJ;
+
+	array_push(filenames, "./assets/pikachu.STL");
+	filet = STL;
 
 	object_count = (size_t)array_length(filenames);
 
@@ -26,6 +31,7 @@ void setup(void) {
 	meshes = calloc(object_count, sizeof(mesh_t));
 
 	for (size_t i = 0; i < object_count; i++) {
+		meshes->filet = filet;
 		load_obj_file_data(filenames[i], &meshes[i]);
 	}
 

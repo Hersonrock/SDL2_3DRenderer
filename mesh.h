@@ -5,6 +5,11 @@
 #include <stdlib.h>
 #include "vector.h"
 
+typedef enum {
+	OBJ,
+	STL
+} filet_t;
+
 typedef struct {
 	int a;
 	int b;
@@ -15,6 +20,8 @@ typedef struct {
 	vec3_t* vertices;
 	face_t* faces;
 	vec3_t rotation;
+	size_t n_faces;
+	filet_t filet;
 }mesh_t;
 
 extern mesh_t* meshes;
