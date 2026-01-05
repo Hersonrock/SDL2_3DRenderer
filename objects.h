@@ -3,6 +3,11 @@
 #include "mesh.h"
 #include "triangle.h"
 
+typedef struct {
+	char* filename;
+	filetype_t filetype;
+}file_t;
+
 extern char**  filenames;
 extern size_t object_count;
 extern triangle_t** triangles_to_render;

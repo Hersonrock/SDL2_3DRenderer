@@ -17,7 +17,6 @@ FILE* open_file(char* filename, char* mode) {
 bool read_file(FILE* file_stream, vec3_t** out_vertices, face_t** out_faces) {
 
 	char  input_buffer[MAX_LINE_SIZE];
-	int n_faces = 0;
 	while (fgets(input_buffer, sizeof(input_buffer), file_stream)) {
 		// remove trailing newline and carriage return
 		uint32_t new_line_index = strcspn(input_buffer, "\r\n");
@@ -46,12 +45,10 @@ bool read_file(FILE* file_stream, vec3_t** out_vertices, face_t** out_faces) {
 			faces.b = vertex_indices[1];
 			faces.c = vertex_indices[2];
 			array_push(*out_faces, faces);
-			n_faces++;
 			continue;
 		}
 		
 	}
-	meshes->n_faces = n_faces;
 	return true;
 }
 
@@ -68,8 +65,6 @@ bool read_file_stl(FILE* file_stream, vec3_t** out_vertices) {
 								   (number_of_triangles_raw[1] << 8) |
 								   (number_of_triangles_raw[2] << 16) |
 								   (number_of_triangles_raw[3] << 24);
-
-	meshes->n_faces = number_of_triangles;
 	for (uint32_t n = 0; n < number_of_triangles; n++) {
 		vec3_t vertex[3] = { 0 };
 		uint8_t float_raw[4] = { 0 };
@@ -84,9 +79,10 @@ bool read_file_stl(FILE* file_stream, vec3_t** out_vertices) {
 				}
 				memcpy_s(&vertex_data[j], sizeof(float), float_raw, sizeof(float));
 			}
-			vertex[i].x = vertex_data[0] / FACTOR;
-			vertex[i].y = vertex_data[1] / FACTOR;
-			vertex[i].z = vertex_data[2] / FACTOR;
+			
+			vertex[i].x = vertex_data[0] / 20  - 0.3f;
+			vertex[i].y = vertex_data[1] / 20 ;
+			vertex[i].z = vertex_data[2] / 20 - 1.0f;
 			array_push(*out_vertices, vertex[i]);
 		}
 		fseek(file_stream, 2, SEEK_CUR);  //Skipping Attribute byte count
@@ -101,14 +97,16 @@ void load_obj_file_data(char* filename, mesh_t* in_mesh) {
 	in_mesh->vertices = NULL;
 	in_mesh->faces = NULL;
 
-	switch (in_mesh->filet) {
+	switch (in_mesh->file_type) {
 		case OBJ:
 			fd = open_file(filename, "r" );
 			read_file(fd, &in_mesh->vertices, &in_mesh->faces);
+			in_mesh->n_triangles = array_length(in_mesh->faces);
 			break;
 		case STL:
 			fd = open_file(filename, "rb");
 			read_file_stl(fd, &in_mesh->vertices);
+			in_mesh->n_triangles = array_length(in_mesh->vertices) / 3;
 			break;
 	}
 }

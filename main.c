@@ -17,24 +17,23 @@ int32_t previous_frame_time = 0;
 float rotation_delta = 0.05;
 
 void setup(void) {
+	file_t* file_metadata = NULL;
 
-	filet_t filet;
-	//array_push(filenames, "./assets/cube1.obj");
-	//filet = OBJ;
-
-	array_push(filenames, "./assets/pikachu.STL");
-	filet = STL;
-
-	object_count = (size_t)array_length(filenames);
+	file_t file1 = {.filename = "./assets/f22.obj" , .filetype = OBJ };
+	//file_t file2 = {.filename = "./assets/pikachu.STL" , .filetype = STL};
+	
+	array_push(file_metadata, file1)
+	//array_push(file_metadata, file2);
+	
+	object_count = (size_t)array_length(file_metadata);
 
 	triangles_to_render = calloc(object_count, sizeof(triangle_t*));
 	meshes = calloc(object_count, sizeof(mesh_t));
 
 	for (size_t i = 0; i < object_count; i++) {
-		meshes->filet = filet;
-		load_obj_file_data(filenames[i], &meshes[i]);
+		meshes[i].file_type = file_metadata[i].filetype;
+		load_obj_file_data(file_metadata[i].filename, &meshes[i]);
 	}
-
 }
 
 static void process_input(void) {
@@ -56,7 +55,6 @@ static void process_input(void) {
 	default:
 		break;
 	}
-
 }
 
 static void update(void) {
@@ -70,8 +68,9 @@ static void update(void) {
 
 	for (size_t n = 0; n < object_count; n++) {
 
-		perform_transforms(&meshes[n], &triangles_to_render[n]);
 
+		perform_transforms(&meshes[n], &triangles_to_render[n]);
+		
 		meshes[n].rotation = (vec3_t){
 			.x = meshes[n].rotation.x + rotation_delta,
 			.y = meshes[n].rotation.y + rotation_delta,

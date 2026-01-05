@@ -3,6 +3,7 @@
 #define EPSILON        1e-8f
 
 #include <stdbool.h>
+#include <stdint.h>
 #include "vector.h"
 
 extern vec3_t camera_position;

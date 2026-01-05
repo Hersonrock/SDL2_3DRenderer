@@ -13,9 +13,9 @@ void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh) {
 	vec3_t clip_space_points[TRI];
 	vec2_t screen_space_points[TRI];
 
-	for (size_t i = 0; i < mesh->n_faces; i++) {
+	for (size_t i = 0; i < mesh->n_triangles; i++) {
 		vec3_t face_vertices[TRI];
-		switch (mesh->filet) {
+		switch (mesh->file_type) {
 		case OBJ:
 			face_vertices[0] = mesh->vertices[mesh->faces[i].a - 1];
 			face_vertices[1] = mesh->vertices[mesh->faces[i].b - 1];
@@ -26,7 +26,6 @@ void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh) {
 			face_vertices[1] = mesh->vertices[(i * 3) + 1];
 			face_vertices[2] = mesh->vertices[(i * 3) + 2];
 			break;
-
 		}
 		
 		for (size_t j = 0; j < TRI; j++) {
