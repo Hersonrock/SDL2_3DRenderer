@@ -19,9 +19,11 @@ float rotation_delta = 0.05;
 void setup(void) {
 	file_t* file_metadata = NULL;
 
-	file_t file1 = {.filename = "./assets/f22.obj" , .filetype = OBJ };
+	file_t file1 = {.filename = "./assets/monkeyout.iemf" , .filetype = IEMF };
+	//file_t file1 = { .filename = "./assets/f22.obj" , .filetype = OBJ };
+	// 
 	//file_t file2 = {.filename = "./assets/pikachu.STL" , .filetype = STL};
-	
+
 	array_push(file_metadata, file1)
 	//array_push(file_metadata, file2);
 	
@@ -67,7 +69,6 @@ static void update(void) {
 	previous_frame_time = SDL_GetTicks();
 
 	for (size_t n = 0; n < object_count; n++) {
-
 
 		perform_transforms(&meshes[n], &triangles_to_render[n]);
 		

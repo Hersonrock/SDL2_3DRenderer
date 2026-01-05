@@ -7,7 +7,8 @@
 
 typedef enum {
 	OBJ,
-	STL
+	STL,
+	IEMF
 } filetype_t;
 
 typedef struct {

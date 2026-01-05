@@ -17,6 +17,7 @@ void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh) {
 		vec3_t face_vertices[TRI];
 		switch (mesh->file_type) {
 		case OBJ:
+		case IEMF:
 			face_vertices[0] = mesh->vertices[mesh->faces[i].a - 1];
 			face_vertices[1] = mesh->vertices[mesh->faces[i].b - 1];
 			face_vertices[2] = mesh->vertices[mesh->faces[i].c - 1];
