@@ -10,7 +10,7 @@
 
 #define FPS 30
 #define FRAME_TARGET_TIME (1000 / FPS)
-#define EPSILON        1e-8f
+
 bool is_running = false;
 int32_t previous_frame_time = 0;
 
