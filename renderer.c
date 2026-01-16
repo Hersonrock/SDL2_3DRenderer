@@ -149,12 +149,67 @@ void draw_triangle(triangle_t triangle, uint32_t color) {
 	}
 }
 
+void draw_filled_triangles(triangle_t t, uint32_t color) {
+	sort_triangle_vertices_on_y(&t);
+	int x0 = t.points[0].x;
+	int y0 = t.points[0].y;
+	int x1 = t.points[1].x;
+	int y1 = t.points[1].y;
+	int x2 = t.points[2].x;
+	int y2 = t.points[2].y;
+
+	if (y0 == y1) {
+		draw_flat_top_triangle(x0, y0, x2, y2, t.points[1], color);
+	}
+	else if (y2 == y1) {
+		draw_flat_bottom_triangle(x0, y0, x1, y1, t.points[2], color);
+	}
+	else {
+		vec2_t m = triangle_get_m(&t);
+		draw_flat_bottom_triangle(x0, y0, x1, y1, m, color);
+		draw_flat_top_triangle(x1, y1, x2, y2, m, color);
+	}
+}
+
+void draw_flat_bottom_triangle(int x0, int y0, int x1, int y1, vec2_t m, uint32_t color) {
+	float inv_slope1;
+	float inv_slope2;
+
+	inv_slope1 = (float)(x1 - x0) / (y1 - y0);
+	inv_slope2 = (float)(m.x - x0) / (m.y - y0);
+	float x_start = x0;
+	float x_end = x0;
+
+	for (int y = y0; y <= m.y; y++) {
+		draw_line(x_start, y, x_end, y, color);
+		x_start += inv_slope1;
+		x_end += inv_slope2;
+	}
+}
+
+void draw_flat_top_triangle(int x1, int y1, int x2, int y2, vec2_t m, uint32_t color) {
+	float inv_slope1;
+	float inv_slope2;
+
+	inv_slope1 = (float)(x2 - x1) / (y2 - y1);
+	inv_slope2 = (float)(m.x - x2) / (m.y - y2);
+	float x_start = x2;
+	float x_end = x2;
+
+	for (int y = y2; y >= m.y; y--) {
+		draw_line(x_start, y, x_end, y, color);
+		x_start -= inv_slope1;
+		x_end -= inv_slope2;
+	}
+}
+
 void draw_objects(triangle_t** triangles_to_render, uint32_t object_count, uint32_t color) {
 	for (size_t w = 0; w < object_count; w++) {
 
 		size_t num_triangles = array_length(triangles_to_render[w]);
 		for (size_t i = 0; i < num_triangles; i++) {
 			draw_triangle(triangles_to_render[w][i], color);
+			draw_filled_triangles(triangles_to_render[w][i], color);
 		}
 		array_free(triangles_to_render[w]);
 		triangles_to_render[w] = NULL;

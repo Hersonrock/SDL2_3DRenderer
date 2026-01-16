@@ -27,6 +27,10 @@ void draw_rectangle(uint32_t x, uint32_t y, uint32_t width, uint32_t height, uin
 void draw_triangle(triangle_t triangle, uint32_t color);
 void draw_objects(triangle_t** triangles_to_render, uint32_t object_count, uint32_t color);
 
+void draw_filled_triangles(triangle_t t, uint32_t color);
+void draw_flat_bottom_triangle(int x0, int y0, int x1, int y1, vec2_t m, uint32_t color);
+void draw_flat_top_triangle(int x1, int y1, int x2, int y2, vec2_t m, uint32_t color);
+
 void color_buffer_clear(uint32_t color);
 void color_buffer_render(void);
 
