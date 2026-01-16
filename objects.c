@@ -2,6 +2,7 @@
 #include "array.h"
 #include "transform.h"
 #include "vector.h"
+#include <stdio.h>
 
 char** filenames = NULL;
 triangle_t** triangles_to_render = NULL;
@@ -16,19 +17,19 @@ void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh) {
 	for (size_t i = 0; i < mesh->n_triangles; i++) {
 		vec3_t face_vertices[TRI];
 		switch (mesh->file_type) {
-		case OBJ:
-		case IEMF:
-			face_vertices[0] = mesh->vertices[mesh->faces[i].a - 1];
-			face_vertices[1] = mesh->vertices[mesh->faces[i].b - 1];
-			face_vertices[2] = mesh->vertices[mesh->faces[i].c - 1];
-			break;
-		case STL:
-			face_vertices[0] = mesh->vertices[(i * 3) + 0];
-			face_vertices[1] = mesh->vertices[(i * 3) + 1];
-			face_vertices[2] = mesh->vertices[(i * 3) + 2];
-			break;
+			case OBJ:
+			case IEMF:
+				face_vertices[0] = mesh->vertices[mesh->faces[i].a - 1];
+				face_vertices[1] = mesh->vertices[mesh->faces[i].b - 1];
+				face_vertices[2] = mesh->vertices[mesh->faces[i].c - 1];
+				break;
+			case STL:
+				face_vertices[0] = mesh->vertices[(i * 3) + 0];
+				face_vertices[1] = mesh->vertices[(i * 3) + 1];
+				face_vertices[2] = mesh->vertices[(i * 3) + 2];
+				break;
 		}
-		
+
 		for (size_t j = 0; j < TRI; j++) {
 			world_space_points[j] = world_transform(face_vertices[j], mesh->rotation); // World Space transform
 			view_space_points[j] = view_transform(world_space_points[j]); // View Space transform

@@ -140,7 +140,6 @@ bool read_file_iemf(FILE* file_stream, vec3_t** out_vertices, face_t** out_faces
 				face_index_raw[w] = fgetc(file_stream);
 			}
 			memcpy_s(&face_data[j], sizeof(uint16_t), face_index_raw, sizeof(uint16_t));
-			printf("index[%zu] = %u\n", j, face_data[j]);
 		}
 
 		faces.a = (int)face_data[0] + 1;

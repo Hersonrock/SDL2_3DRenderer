@@ -149,18 +149,17 @@ void draw_triangle(triangle_t triangle, uint32_t color) {
 	}
 }
 
-void draw_objects(triangle_t** triangles_to_render, uint32_t object_count) {
+void draw_objects(triangle_t** triangles_to_render, uint32_t object_count, uint32_t color) {
 	for (size_t w = 0; w < object_count; w++) {
 
 		size_t num_triangles = array_length(triangles_to_render[w]);
 		for (size_t i = 0; i < num_triangles; i++) {
-			draw_triangle(triangles_to_render[w][i], 0xFFFFFFFF);
+			draw_triangle(triangles_to_render[w][i], color);
 		}
 		array_free(triangles_to_render[w]);
 		triangles_to_render[w] = NULL;
 	}
 }
-
 
 void color_buffer_clear(uint32_t color) {
 	for (size_t y = 0; y < viewport.h; y++) {

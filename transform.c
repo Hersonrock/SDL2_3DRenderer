@@ -15,7 +15,7 @@ vec3_t world_transform(vec3_t point, vec3_t rotation) {
 		.y = point.y,
 		.z = point.z,
 	};
-
+	
 	mat3_t rotation_mat3_z = make_rotation_mat3_z(rotation.z);
 	mat3_t rotation_mat3_x = make_rotation_mat3_x(rotation.x);
 	mat3_t rotation_mat3_y = make_rotation_mat3_y(rotation.y);

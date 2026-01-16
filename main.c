@@ -19,12 +19,11 @@ float rotation_delta = 0.05;
 void setup(void) {
 	file_t* file_metadata = NULL;
 
-	file_t file1 = {.filename = "./assets/monkeyout.iemf" , .filetype = IEMF };
-	//file_t file1 = { .filename = "./assets/f22.obj" , .filetype = OBJ };
-	// 
+	//file_t file1 = {.filename = "./assets/monkeyout.iemf" , .filetype = IEMF };
+	file_t file1 = { .filename = "./assets/f22.obj" , .filetype = OBJ };
 	//file_t file2 = {.filename = "./assets/pikachu.STL" , .filetype = STL};
 
-	array_push(file_metadata, file1)
+	array_push(file_metadata, file1);
 	//array_push(file_metadata, file2);
 	
 	object_count = (size_t)array_length(file_metadata);
@@ -71,7 +70,7 @@ static void update(void) {
 	for (size_t n = 0; n < object_count; n++) {
 
 		perform_transforms(&meshes[n], &triangles_to_render[n]);
-		
+
 		meshes[n].rotation = (vec3_t){
 			.x = meshes[n].rotation.x + rotation_delta,
 			.y = meshes[n].rotation.y + rotation_delta,
@@ -84,7 +83,8 @@ static void render(void) {
 	SDL_SetRenderDrawColor(renderer, 0, 100, 100, 255);
 	SDL_RenderClear(renderer);
 
-	draw_objects(triangles_to_render, object_count);
+	draw_objects(triangles_to_render, object_count, 0xFFFFFFFF);
+	
 	color_buffer_render();
 	color_buffer_clear(0xFF000000);
 
