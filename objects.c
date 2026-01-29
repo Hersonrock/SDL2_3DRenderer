@@ -38,8 +38,13 @@ void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh) {
 		}
 
 		if (backface_culling(view_space_points)) continue;
-
+		//Preparation for Painters algorithm
+		float avg_depth = (view_space_points[0].z +
+						   view_space_points[1].z +
+						   view_space_points[2].z) / 3;
+		
 		triangle_t transformed_triangle;
+		transformed_triangle.avg_depth = avg_depth;
 		for (size_t j = 0; j < TRI; j++) {
 			//  Translation 
 			screen_space_points[j] = screen_transform(clip_space_points[j]);
@@ -47,7 +52,7 @@ void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh) {
 		}
 		array_push(*triangles_on_mesh, transformed_triangle);
 	}
-
+	sort_triangles(*triangles_on_mesh, array_length(*triangles_on_mesh));
 }
 
 void free_objects() {
