@@ -17,14 +17,17 @@ FILE* open_file(char* filename, char* mode) {
 bool read_file(FILE* file_stream, vec3_t** out_vertices, face_t** out_faces) {
 
 	char  input_buffer[MAX_LINE_SIZE];
+
 	while (fgets(input_buffer, sizeof(input_buffer), file_stream)) {
-		// remove trailing newline and carriage return
-		uint32_t new_line_index = strcspn(input_buffer, "\r\n");
-		input_buffer[new_line_index] = '\0';
 		if (input_buffer[0] == '\0') {
 			continue;
 		}
-		if (strncmp(input_buffer, "v ", 2) == 0) {
+
+		// remove trailing newline and carriage return
+		uint32_t new_line_index = strcspn(input_buffer, "\r\n");
+		input_buffer[new_line_index] = '\0';
+
+		if (strncmp(input_buffer, "v ", 2) == 0) { // If the first two characters are equal to "v "
 			vec3_t vertex = { 0 };
 			sscanf_s(input_buffer, "v %f %f %f", &vertex.x, &vertex.y, &vertex.z);
 
@@ -32,7 +35,7 @@ bool read_file(FILE* file_stream, vec3_t** out_vertices, face_t** out_faces) {
 			continue;
 		}
 
-		else if (strncmp(input_buffer, "f ", 2) == 0) {
+		if (strncmp(input_buffer, "f ", 2) == 0) {
 			face_t faces = { 0 };
 			int vertex_indices[3];
 			int texture_indices[3];
@@ -45,9 +48,7 @@ bool read_file(FILE* file_stream, vec3_t** out_vertices, face_t** out_faces) {
 			faces.b = vertex_indices[1];
 			faces.c = vertex_indices[2];
 			array_push(*out_faces, faces);
-			continue;
 		}
-
 	}
 	return true;
 }
