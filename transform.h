@@ -14,6 +14,6 @@ vec3_t view_transform(vec3_t point);
 
 vec2_t screen_transform(vec3_t point);
 vec3_t clip_transform(vec3_t point);
-bool backface_culling(vec3_t* points);
+bool backface_culling(vec3_t* vertices);
 
 #endif // ! TRANSFORM_H

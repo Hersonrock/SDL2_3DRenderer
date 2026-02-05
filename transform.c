@@ -66,16 +66,15 @@ vec3_t clip_transform(vec3_t point) {
 	return transformed_point;
 }
 
-bool backface_culling(vec3_t* points) {
+bool backface_culling(vec3_t* vertices) {
 
-	vec3_t a = vect3_sub(points[1], points[0]);
-	vec3_t b = vect3_sub(points[2], points[0]);
+	vec3_t a = vect3_sub(vertices[0], vertices[1]);
+	vec3_t b = vect3_sub(vertices[2], vertices[1]);
+	vec3_t normal = vect3_cross(a, b);
 
-	vec3_t normal = vect3_cross(b, a);
-	if (vect3_dot(normal, normal) < EPSILON) //Check for degenerate Triangles.
-		return true;
+	//Early return for degenerated triangles.
+	if (vect3_dot(normal, normal) < EPSILON * EPSILON) return true;
 
-	vec3_t face_to_camera = points[0];
-
-	return vect3_dot(normal, face_to_camera) <= 0;
+	//Camera is assumed to be at 0 because the view transform should put camera at 0
+	return vect3_dot(vertices[1], normal) <= EPSILON;
 }
