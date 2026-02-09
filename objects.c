@@ -2,6 +2,7 @@
 #include "array.h"
 #include "transform.h"
 #include "vector.h"
+#include "matrix.h"
 #include <stdio.h>
 
 char** filenames = NULL;
@@ -9,6 +10,7 @@ triangle_t** triangles_to_render = NULL;
 size_t object_count = 0;
 
 void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh) {
+	mat4_t world_matrix;
 	vec3_t world_space_points[TRI];
 	vec3_t view_space_points[TRI];
 	vec3_t clip_space_points[TRI];
@@ -30,8 +32,14 @@ void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh) {
 				break;
 		}
 
+		world_matrix = world_transform(1, 1, 1, 0, 0, 0, mesh->rotation.x, mesh->rotation.y, mesh->rotation.z);
+
 		for (size_t j = 0; j < TRI; j++) {
-			world_space_points[j] = world_transform(face_vertices[j], mesh->rotation); // World Space transform
+			vec4_t homogeneous_vertices = vec4_from_vec3(face_vertices[j]);
+
+			vec4_t world_space_vertex = mat4_mult_vec4(world_matrix, homogeneous_vertices);
+
+			world_space_points[j] = vec3_from_vec4(world_space_vertex); // World Space transform
 			view_space_points[j] = view_transform(world_space_points[j]); // View Space transform
 			clip_space_points[j] = clip_transform(view_space_points[j]);
 			// Not a real clip space or NDC (Normalized device coordinates) transform
