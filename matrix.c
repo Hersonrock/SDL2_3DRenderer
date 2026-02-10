@@ -210,3 +210,109 @@ mat4_t mat4_mult_mat4(mat4_t m1, mat4_t m2) {
 
 	return result;
 }
+
+float mat3_determinant(mat3_t m) {
+	float det = m.m[0][0] * m.m[1][1] * m.m[2][2] + m.m[0][1] * m.m[1][2] * m.m[2][0] + m.m[0][2] * m.m[1][0] * m.m[2][1]
+		      - m.m[0][0] * m.m[1][2] * m.m[2][1] - m.m[0][1] * m.m[1][0] * m.m[2][2] - m.m[0][2] * m.m[1][1] * m.m[2][0];
+	return det;
+}
+
+float mat4_determinant(mat4_t m) {
+
+	// define cofactor matrices
+	float det = 0;
+	mat3_t cof1 = {{
+		{m.m[1][1], m.m[1][2], m.m[1][3]},
+		{m.m[2][1], m.m[2][2], m.m[2][3]},
+		{m.m[3][1], m.m[3][2], m.m[3][3]},
+	}};
+
+	mat3_t cof2 = {{
+		{m.m[1][0], m.m[1][2], m.m[1][3]},
+		{m.m[2][0], m.m[2][2], m.m[2][3]},
+		{m.m[3][0], m.m[3][2], m.m[3][3]},
+	}};
+
+	mat3_t cof3 = {{
+		{m.m[1][0], m.m[1][1], m.m[1][3]},
+		{m.m[2][0], m.m[2][1], m.m[2][3]},
+		{m.m[3][0], m.m[3][1], m.m[3][3]},
+	}};
+
+	mat3_t cof4 = {{
+		{m.m[1][0], m.m[1][1], m.m[1][2]},
+		{m.m[2][0], m.m[2][1], m.m[2][2]},
+		{m.m[3][0], m.m[3][1], m.m[3][2]},
+	}};
+
+	float d1 = mat3_determinant(cof1);
+	float d2 = mat3_determinant(cof2);
+	float d3 = mat3_determinant(cof3);
+	float d4 = mat3_determinant(cof4);
+	
+	// Expansion by cofactors
+	det = m.m[0][0] * d1 - m.m[0][1] * d2 + m.m[0][2] * d3 - m.m[0][3] * d4;
+
+	return det;
+}
+
+mat4_t mat4_transpose(mat4_t m) {
+	mat4_t transpose = {{
+			{m.m[0][0], m.m[1][0], m.m[2][0], m.m[3][0]},
+			{m.m[0][1], m.m[1][1], m.m[2][1], m.m[3][1]},
+			{m.m[0][2], m.m[1][2], m.m[2][2], m.m[3][2]},
+			{m.m[0][3], m.m[1][3], m.m[2][3], m.m[3][3]},
+		}};
+
+	return transpose;
+}
+mat4_t mat4_div_float(mat4_t m, float f) {
+	mat4_t result = { {
+		{m.m[0][0]/f, m.m[0][1]/f, m.m[0][2]/f, m.m[0][3]/f},
+		{m.m[1][0]/f, m.m[1][1]/f, m.m[1][2]/f, m.m[1][3]/f},
+		{m.m[2][0]/f, m.m[2][1]/f, m.m[2][2]/f, m.m[2][3]/f},
+		{m.m[3][0]/f, m.m[3][1]/f, m.m[3][2]/f, m.m[3][3]/f},
+	} };
+
+	return result;
+}
+
+mat3_t mat4_minor(mat4_t m, int row, int col) {
+	mat3_t out;
+	int r = 0;
+
+	for (int i = 0; i < 4; i++) {
+		if (i == row) continue;
+
+		int c = 0;
+		for (int j = 0; j < 4; j++) {
+			if (j == col) continue;
+
+			out.m[r][c] = m.m[i][j];
+			c++;
+		}
+		r++;
+	}
+
+	return out;
+}
+
+mat4_t mat4_inverse(mat4_t m) {
+	float det = mat4_determinant(m);
+
+	mat4_t cof_m;
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			float sign = ((i + j) % 2 == 0) ? 1.0f : -1.0f;
+			float det = mat3_determinant(mat4_minor(m, i, j));
+
+			cof_m.m[i][j] = sign * det;
+		}
+	}
+
+	mat4_t t_cof_m = mat4_transpose(cof_m);
+
+	mat4_t inverse = mat4_div_float(t_cof_m, det);
+	return inverse;
+}

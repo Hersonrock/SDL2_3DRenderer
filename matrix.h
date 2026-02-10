@@ -28,5 +28,11 @@ mat4_t make_rotation_mat4_x(float a);
 mat4_t make_rotation_mat4_y(float a);
 mat4_t make_rotation_mat4_z(float a);
 mat4_t mat4_mult_mat4(mat4_t m1, mat4_t m2);
+float mat3_determinant(mat3_t m);
+float mat4_determinant(mat4_t m);
+mat4_t mat4_transpose(mat4_t m);
+mat4_t mat4_inverse(mat4_t m);
+mat4_t mat4_div_float(mat4_t m, float f);
+mat3_t mat4_minor(mat4_t m, int row, int col);
 
 #endif //MATRIX_H
