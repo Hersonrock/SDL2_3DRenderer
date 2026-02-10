@@ -11,7 +11,7 @@ extern vec3_t camera_position;
 extern float fov_factor;
 
 mat4_t world_transform(float sx, float sy, float sz, float tx, float ty, float tz, float pitch, float yaw, float roll);
-vec3_t view_transform(vec3_t point);
+mat4_t view_transform(float tx, float ty, float tz, float pitch, float yaw, float roll);
 
 vec2_t screen_transform(vec3_t point);
 vec3_t clip_transform(vec3_t point);

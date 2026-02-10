@@ -11,7 +11,8 @@ size_t object_count = 0;
 
 void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh) {
 	mat4_t world_matrix;
-	vec3_t world_space_points[TRI];
+	mat4_t view_matrix;
+
 	vec3_t view_space_points[TRI];
 	vec3_t clip_space_points[TRI];
 	vec2_t screen_space_points[TRI];
@@ -33,14 +34,15 @@ void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh) {
 		}
 
 		world_matrix = world_transform(1, 1, 1, 0, 0, 0, mesh->rotation.x, mesh->rotation.y, mesh->rotation.z);
+		view_matrix = view_transform(camera_position.x, camera_position.y, camera_position.z, 0, 0, 0);
 
 		for (size_t j = 0; j < TRI; j++) {
 			vec4_t homogeneous_vertices = vec4_from_vec3(face_vertices[j]);
 
 			vec4_t world_space_vertex = mat4_mult_vec4(world_matrix, homogeneous_vertices);
+			vec4_t view_space_vertex = mat4_mult_vec4(view_matrix, world_space_vertex);
 
-			world_space_points[j] = vec3_from_vec4(world_space_vertex); // World Space transform
-			view_space_points[j] = view_transform(world_space_points[j]); // View Space transform
+			view_space_points[j] = vec3_from_vec4(view_space_vertex); // View Space transform
 			clip_space_points[j] = clip_transform(view_space_points[j]);
 			// Not a real clip space or NDC (Normalized device coordinates) transform
 		}

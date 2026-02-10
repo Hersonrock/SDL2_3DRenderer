@@ -26,15 +26,25 @@ mat4_t world_transform( float sx, float sy, float sz, float tx, float ty, float 
 	return world_matrix;
 }
 
-vec3_t view_transform(vec3_t point) {
-	/*	Dolly , the actual camera moves. Objects closer change aparent size faster than those far away.
-	*/
-	vec3_t transformed_point = {
-		.x = point.x,
-		.y = point.y,
-		.z = point.z - camera_position.z
-	};
-	return transformed_point;
+mat4_t view_transform(float tx, float ty, float tz, float pitch, float yaw, float roll) {
+	
+	mat4_t camera_matrix = mat4_identity();
+	mat4_t translation_matrix = mat4_make_translation(tx, ty, tz);
+
+	mat4_t rotation_matrix_x = make_rotation_mat4_x(pitch);
+	mat4_t rotation_matrix_y = make_rotation_mat4_y(yaw);
+	mat4_t rotation_matrix_z = make_rotation_mat4_z(roll);
+
+	mat4_t rotation_matrix = mat4_identity();
+	rotation_matrix = mat4_mult_mat4(rotation_matrix, rotation_matrix_x);
+	rotation_matrix = mat4_mult_mat4(rotation_matrix, rotation_matrix_y);
+	rotation_matrix = mat4_mult_mat4(rotation_matrix, rotation_matrix_z);
+
+	camera_matrix = mat4_mult_mat4(camera_matrix, rotation_matrix);
+	camera_matrix = mat4_mult_mat4(camera_matrix, translation_matrix);
+
+	mat4_t view_matrix = mat4_inverse(camera_matrix);
+	return view_matrix;
 }
 
 vec2_t screen_transform(vec3_t point) {
