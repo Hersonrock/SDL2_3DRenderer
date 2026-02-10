@@ -19,9 +19,11 @@ mat4_t world_transform( float sx, float sy, float sz, float tx, float ty, float 
 	rotation_matrix = mat4_mult_mat4(rotation_matrix, rotation_matrix_y);
 	rotation_matrix = mat4_mult_mat4(rotation_matrix, rotation_matrix_z);
 	
-	world_matrix = mat4_mult_mat4(world_matrix, scale_matrix);
-	world_matrix = mat4_mult_mat4(world_matrix, rotation_matrix);
+	
 	world_matrix = mat4_mult_mat4(world_matrix, translation_matrix);
+	world_matrix = mat4_mult_mat4(world_matrix, rotation_matrix);
+	world_matrix = mat4_mult_mat4(world_matrix, scale_matrix);
+	
 
 	return world_matrix;
 }
