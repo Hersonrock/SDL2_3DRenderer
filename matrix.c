@@ -316,3 +316,15 @@ mat4_t mat4_inverse(mat4_t m) {
 	mat4_t inverse = mat4_div_float(t_cof_m, det4);
 	return inverse;
 }
+
+mat4_t mat4_make_perspective(uint32_t screen_height, uint32_t screen_width,float fov_angle) {
+	mat4_t m = mat4_identity();
+
+	float a = screen_height / screen_width;
+
+	m.m[0][0] = a / (tan(fov_angle * 0.5));
+	m.m[1][1] = 1 / (tan(fov_angle * 0.5));
+	//m.m[2][2] = tz;
+
+	return m;
+}
