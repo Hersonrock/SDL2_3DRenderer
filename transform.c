@@ -49,6 +49,17 @@ mat4_t view_transform(float tx, float ty, float tz, float pitch, float yaw, floa
 	return view_matrix;
 }
 
+vec3_t clip_transform(vec3_t point) {
+
+	float projection_factor = point.z;
+	vec3_t transformed_point = {
+		.x = (point.x * fov_factor) / projection_factor,
+		.y = (point.y * fov_factor) / projection_factor,
+		.z = (point.z * fov_factor) / projection_factor
+	};
+	return transformed_point;
+}
+
 vec2_t screen_transform(vec3_t point) {
 
 	/*Screen space transform
@@ -62,17 +73,6 @@ vec2_t screen_transform(vec3_t point) {
 	vec2_t transformed_point = {
 		.x = point.x + viewport.w * 0.5f,
 		.y = point.y + viewport.h * 0.5f
-	};
-	return transformed_point;
-}
-
-vec3_t clip_transform(vec3_t point) {
-
-	float projection_factor = point.z;
-	vec3_t transformed_point = {
-		.x = (point.x * fov_factor) / projection_factor,
-		.y = (point.y * fov_factor) / projection_factor,
-		.z = (point.z * fov_factor) / projection_factor
 	};
 	return transformed_point;
 }

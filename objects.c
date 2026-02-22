@@ -43,20 +43,23 @@ void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh) {
 			vec4_t view_space_vertex = mat4_mult_vec4(view_matrix, world_space_vertex);
 
 			view_space_points[j] = vec3_from_vec4(view_space_vertex); // View Space transform
-			clip_space_points[j] = clip_transform(view_space_points[j]);
 			// Not a real clip space or NDC (Normalized device coordinates) transform
 		}
 
 		if (backface_culling(view_space_points)) continue;
+
 		//Preparation for Painters algorithm
 		float avg_depth = (view_space_points[0].z +
-						   view_space_points[1].z +
-						   view_space_points[2].z) / 3;
-		
+			view_space_points[1].z +
+			view_space_points[2].z) / 3;
+
 		triangle_t transformed_triangle;
 		transformed_triangle.avg_depth = avg_depth;
+
 		for (size_t j = 0; j < TRI; j++) {
+			clip_space_points[j] = clip_transform(view_space_points[j]);
 			//  Translation 
+
 			screen_space_points[j] = screen_transform(clip_space_points[j]);
 			transformed_triangle.points[j] = screen_space_points[j];
 		}
