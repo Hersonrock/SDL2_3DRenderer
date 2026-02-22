@@ -298,21 +298,21 @@ mat3_t mat4_minor(mat4_t m, int row, int col) {
 }
 
 mat4_t mat4_inverse(mat4_t m) {
-	float det = mat4_determinant(m);
+	float det4 = mat4_determinant(m);
 
 	mat4_t cof_m;
 
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			float sign = ((i + j) % 2 == 0) ? 1.0f : -1.0f;
-			float det = mat3_determinant(mat4_minor(m, i, j));
+			float minor_det = mat3_determinant(mat4_minor(m, i, j));
 
-			cof_m.m[i][j] = sign * det;
+			cof_m.m[i][j] = sign * minor_det;
 		}
 	}
 
 	mat4_t t_cof_m = mat4_transpose(cof_m);
 
-	mat4_t inverse = mat4_div_float(t_cof_m, det);
+	mat4_t inverse = mat4_div_float(t_cof_m, det4);
 	return inverse;
 }
