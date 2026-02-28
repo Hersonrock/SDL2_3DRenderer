@@ -14,7 +14,6 @@ mat4_t world_transform(float sx, float sy, float sz, float tx, float ty, float t
 mat4_t view_transform(float tx, float ty, float tz, float pitch, float yaw, float roll);
 
 vec2_t screen_transform(vec3_t point);
-vec3_t clip_transform(vec3_t point);
-bool backface_culling(vec3_t* vertices);
+bool backface_culling(vec4_t* vertices);
 
 #endif // ! TRANSFORM_H

@@ -317,14 +317,33 @@ mat4_t mat4_inverse(mat4_t m) {
 	return inverse;
 }
 
-mat4_t mat4_make_perspective(uint32_t screen_height, uint32_t screen_width,float fov_angle) {
+mat4_t mat4_make_perspective(uint32_t screen_height, uint32_t screen_width,float fov_angle, float znear, float zfar) {
 	mat4_t m = mat4_identity();
 
-	float a = screen_height / screen_width;
+	float s = (float)screen_width / (float)screen_height; //aspect ratio only used to scale X
 
-	m.m[0][0] = a / (tan(fov_angle * 0.5));
-	m.m[1][1] = 1 / (tan(fov_angle * 0.5));
-	//m.m[2][2] = tz;
+	// In this case I'm assuming FOV_x and FOV_y are the same and only described by a single float
+	// Used to scale both x and y in a way that when the angle grows bigger all objects on the screen will be scalled down.
+
+	float g = 1 / tan(fov_angle * 0.5);
+
+	//Normalizing Z prep
+	float l = zfar / (zfar - znear);
+
+	/*
+	 ┌─		       ─┐
+	 │g/s 0   0    0│
+	 │0   g   0    0│
+	 │0   0   l -l*n│
+	 │0   0   1	   0│
+	 └─		       ─┘
+	*/
+		 
+	m.m[0][0] = g / s;
+	m.m[1][1] = g;
+	m.m[2][2] = l;
+	m.m[2][3] = -l * znear;
+	m.m[3][2] = 1;
 
 	return m;
 }

@@ -49,43 +49,28 @@ mat4_t view_transform(float tx, float ty, float tz, float pitch, float yaw, floa
 	return view_matrix;
 }
 
-vec3_t clip_transform(vec3_t point) {
-
-	float projection_factor = point.z;
-	vec3_t transformed_point = {
-		.x = (point.x * fov_factor) / projection_factor,
-		.y = (point.y * fov_factor) / projection_factor,
-		.z = (point.z * fov_factor) / projection_factor
-	};
-	return transformed_point;
-}
-
 vec2_t screen_transform(vec3_t point) {
 
-	/*Screen space transform
-	Fov change, is more of a conceptual zoom all points change at the same rate.
-	Translation is also a screen space transform as it is done after the points are moved into 2D.
-	 I'm pilling up many tranformations here as screen transformations and they really are not,
-	 such as the scaling times fov_factor is more of a Clip Space transform.
-	 In the same place the perspective divide / point.z is more of a NDC
-	*/
+	float halfw = (float)viewport.w * 0.5f;
+	float halfh = (float)viewport.h * 0.5f;
 
 	vec2_t transformed_point = {
-		.x = point.x + viewport.w * 0.5f,
-		.y = point.y + viewport.h * 0.5f
+		.x = (point.x * halfw ) + halfw,
+		.y = (point.y * halfh ) + halfh
 	};
 	return transformed_point;
 }
 
-bool backface_culling(vec3_t* vertices) {
+bool backface_culling(vec4_t* vertices) {
 
-	vec3_t a = vect3_sub(vertices[0], vertices[1]);
-	vec3_t b = vect3_sub(vertices[2], vertices[1]);
+	vec3_t a = vec3_from_vec4(vect4_sub(vertices[0], vertices[1]));
+	vec3_t b = vec3_from_vec4(vect4_sub(vertices[2], vertices[1]));
+
 	vec3_t normal = vect3_cross(a, b);
 
 	//Early return for degenerated triangles.
 	if (vect3_dot(normal, normal) < EPSILON * EPSILON) return true;
 
 	//Camera is assumed to be at 0 because the view transform should put camera at 0
-	return vect3_dot(vertices[1], normal) <= EPSILON;
+	return vect3_dot(vec3_from_vec4(vertices[1]), normal) <= EPSILON;
 }

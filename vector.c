@@ -111,6 +111,20 @@ vec3_t vect3_cross(vec3_t v1, vec3_t v2) {
 void vect3_normalize(vec3_t* v) {
     *v = vect3_div(*v, vect3_length(*v));
 }
+
+/////////////////////VECTOR 4D//////////////////
+
+vec4_t vect4_sub(vec4_t v1, vec4_t v2) {
+    vec4_t result = { 0, 0, 0 , 0 };
+    result.x = v1.x - v2.x;
+    result.y = v1.y - v2.y;
+    result.z = v1.z - v2.z;
+    result.w = v1.w - v2.w;
+
+    return result;
+}
+
+
 vec4_t vec4_from_vec3(vec3_t v) {
     vec4_t out = { 0, 0, 0, 0 };
 
@@ -129,3 +143,13 @@ vec3_t vec3_from_vec4(vec4_t v) {
 
     return out;
 }
+
+vec3_t vec3_from_homogeneous(vec4_t v) {
+    vec3_t out = { 0, 0, 0 };
+    out.x = v.x / v.w;
+    out.y = v.y / v.w;
+    out.z = v.z / v.w;
+
+    return out;
+}
+

@@ -39,8 +39,10 @@ vec3_t vect3_cross(vec3_t v1, vec3_t v2);
 void vect3_normalize(vec3_t* v);
 /////////////////////VECTOR 4D//////////////////
 /// Conversion
+vec4_t vect4_sub(vec4_t v1, vec4_t v2);
 vec4_t vec4_from_vec3(vec3_t v);
 vec3_t vec3_from_vec4(vec4_t v);
+vec3_t vec3_from_homogeneous(vec4_t v);
 
 
 #endif // VECTOR

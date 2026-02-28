@@ -2,6 +2,7 @@
 #define MATRIX_H
 
 #include "vector.h"
+#include <stdint.h>
 
 typedef struct {
 	float m[3][3];
@@ -34,5 +35,6 @@ mat4_t mat4_transpose(mat4_t m);
 mat4_t mat4_inverse(mat4_t m);
 mat4_t mat4_div_float(mat4_t m, float f);
 mat3_t mat4_minor(mat4_t m, int row, int col);
+mat4_t mat4_make_perspective(uint32_t screen_height, uint32_t screen_width, float fov_angle, float znear, float zfar);
 
 #endif //MATRIX_H
