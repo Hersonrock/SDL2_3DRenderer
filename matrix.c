@@ -317,7 +317,7 @@ mat4_t mat4_inverse(mat4_t m) {
 	return inverse;
 }
 
-mat4_t mat4_make_perspective(uint32_t screen_height, uint32_t screen_width,float fov_angle, float znear, float zfar) {
+mat4_t mat4_make_perspective(uint32_t screen_width, uint32_t screen_height,float fov_angle, float znear, float zfar) {
 	mat4_t m = mat4_identity();
 
 	float s = (float)screen_width / (float)screen_height; //aspect ratio only used to scale X

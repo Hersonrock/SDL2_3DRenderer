@@ -20,6 +20,9 @@ void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh) {
 
 	vec3_t ndc_vertices[TRI];
 	vec2_t screen_space_points[TRI];
+	world_matrix = world_transform(1, 1, 1, 0, 0, 0, mesh->rotation.x, mesh->rotation.y, mesh->rotation.z);
+	view_matrix = view_transform(camera_position.x, camera_position.y, camera_position.z, 0, 0, 0);
+	perspective_matrix = mat4_make_perspective(viewport.w, viewport.h, M_PI / 3, 0.1f, 100);
 
 	for (size_t i = 0; i < mesh->n_triangles; i++) {
 		vec3_t face_vertices[TRI];
@@ -36,11 +39,6 @@ void perform_transforms(mesh_t* mesh, triangle_t** triangles_on_mesh) {
 				face_vertices[2] = mesh->vertices[(i * 3) + 2];
 				break;
 		}
-
-		world_matrix = world_transform(1, 1, 1, 0, 0, 0, mesh->rotation.x, mesh->rotation.y, mesh->rotation.z);
-		view_matrix = view_transform(camera_position.x, camera_position.y, camera_position.z, 0, 0, 0);
-		perspective_matrix = mat4_make_perspective(viewport.h, viewport.w, M_PI / 3, 0.1f, 100);
-
 		for (size_t j = 0; j < TRI; j++) {
 			vec4_t homogeneous_vertices = vec4_from_vec3(face_vertices[j]);
 			vec4_t world_space_vertex = mat4_mult_vec4(world_matrix, homogeneous_vertices);
