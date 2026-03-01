@@ -14,14 +14,14 @@
 bool is_running = false;
 int32_t previous_frame_time = 0;
 
-float rotation_delta = 0.05;
+float rotation_delta[3] = { 0.05f , 0.05f, 0.05f };
 
 void setup(void) {
 	file_t* file_metadata = NULL;
 
-	//file_t file1 = {.filename = "./assets/monkeyout.iemf" , .filetype = IEMF };
-	file_t file1 = { .filename = "./assets/f22.obj" , .filetype = OBJ };
-	//file_t file2 = {.filename = "./assets/pikachu.STL" , .filetype = STL};
+	file_t file1 = {.filename = "./assets/WPABinder.obj" , .filetype = OBJ};
+	//file_t file1 = { .filename = "./assets/f22.obj" , .filetype = OBJ };
+	//file_t file1 = {.filename = "./assets/pikachu.STL" , .filetype = STL};
 
 	array_push(file_metadata, file1);
 	//array_push(file_metadata, file2);
@@ -72,9 +72,9 @@ static void update(void) {
 		perform_transforms(&meshes[n], &triangles_to_render[n]);
 
 		meshes[n].rotation = (vec3_t){
-			.x = meshes[n].rotation.x + rotation_delta,
-			.y = meshes[n].rotation.y + rotation_delta,
-			.z = meshes[n].rotation.z + rotation_delta
+			.x = meshes[n].rotation.x + rotation_delta[0],
+			.y = meshes[n].rotation.y + rotation_delta[1],
+			.z = meshes[n].rotation.z + rotation_delta[2]
 		};
 	}
 }

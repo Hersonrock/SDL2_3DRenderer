@@ -2,6 +2,8 @@
 #include "array.h"
 #include "io.h"
 
+#define FACTOR 10
+
 FILE* open_file(char* filename, char* mode) {
 	FILE* fd = NULL;
 
@@ -30,6 +32,10 @@ bool read_file(FILE* file_stream, vec3_t** out_vertices, face_t** out_faces) {
 		if (strncmp(input_buffer, "v ", 2) == 0) { // If the first two characters are equal to "v "
 			vec3_t vertex = { 0 };
 			sscanf_s(input_buffer, "v %f %f %f", &vertex.x, &vertex.y, &vertex.z);
+
+			vertex.x /= FACTOR;
+			vertex.y /= FACTOR;
+			vertex.z /= FACTOR;
 
 			array_push(*out_vertices, vertex);
 			continue;
