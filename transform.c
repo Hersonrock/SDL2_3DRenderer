@@ -56,7 +56,7 @@ vec2_t screen_transform(vec3_t point) {
 
 	vec2_t transformed_point = {
 		.x = (point.x * halfw ) + halfw,
-		.y = (point.y * halfh ) + halfh
+		.y = (-point.y * halfh ) + halfh
 	};
 	return transformed_point;
 }
